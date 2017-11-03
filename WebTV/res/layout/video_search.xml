@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#b3000000" >
+
+           
+    <RelativeLayout
+        android:layout_width="872px"
+        android:layout_height="42px"
+        android:layout_marginLeft="204px"
+        android:layout_marginTop="150px"
+        >
+
+        <LinearLayout
+            android:layout_width="872px"
+            android:layout_height="42px"
+            android:visibility="visible"
+            android:focusable="false"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:background="@drawable/search_edit_bg1" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/search_edit_bg2" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:background="@drawable/search_edit_bg3" />
+        </LinearLayout>
+ <EditText
+            android:id="@+id/OTT_Video_Edit_Search"
+            android:layout_width="860px"
+            android:layout_height="30px"
+            android:layout_marginTop="6px"
+            android:layout_marginLeft="3px"
+            android:paddingBottom="1px"
+            android:background="@null"
+            android:paddingLeft="14px"
+             android:textCursorDrawable="@drawable/cursor"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:imeOptions="actionDone"
+            android:inputType="textNoSuggestions"
+            android:maxLength="80"
+            android:textSize="25px" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="635px"
+        android:layout_height="188px"
+        android:layout_marginLeft="442dp"
+        android:layout_marginTop="196dp"
+        >
+
+        <LinearLayout
+            android:layout_width="435px"
+            android:layout_height="188px"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/search_dialog1" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/search_dialog2" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/search_dialog3" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/search_dialog4" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:background="#f5f5f5" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/search_dialog5" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/search_dialog6" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/search_dialog7" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/search_dialog8" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/OTT_Video_Search_3"
+            android:layout_width="172px"
+            android:layout_height="62px"
+            android:layout_marginLeft="100px"
+            android:layout_marginTop="0px"
+            android:background="@drawable/search_button_select"
+            android:textColor="@drawable/search_button_for_textcolor"
+            android:visibility="gone"
+            android:textSize="24px" />
+
+        <Button
+            android:id="@+id/OTT_Video_Search_2"
+            android:layout_width="172px"
+            android:layout_height="62px"
+            android:layout_marginTop="0px"
+            android:layout_marginLeft="280px"
+            android:background="@drawable/search_button_select"
+            android:textColor="@drawable/search_button_for_textcolor"
+            android:visibility="gone"
+            android:textSize="24px" />
+        <Button
+            android:id="@+id/OTT_Video_Search_1"
+            android:layout_width="172px"
+            android:layout_height="62px"
+            android:layout_marginLeft="268px"
+            android:layout_marginTop="0px"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/search_button_select"
+            android:textColor="@drawable/search_button_for_textcolor"
+            android:textSize="24px" />
+    </RelativeLayout>
+
+</RelativeLayout>

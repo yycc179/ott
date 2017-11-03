@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/IDC_LinearLayout_PopupList_Item"
+    android:layout_width="match_parent"
+    android:layout_height="40px"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:id="@+id/IDC_LinearLayout_PopupList_Item"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/popupwindow_listview_bg"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/spinner_checkbox"
+            android:layout_width="25px"
+            android:layout_height="25px"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15px"
+            android:button="@drawable/poplist_checked"
+            android:checked="false"
+            android:focusable="false"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/spinner_textview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="19px" />
+    </LinearLayout>
+
+</LinearLayout>

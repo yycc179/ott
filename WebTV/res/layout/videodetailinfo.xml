@@ -1,0 +1,184 @@
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="1280px"
+    android:layout_height="720px"
+    android:background="@drawable/new_ott_detail_bg" >
+
+    <ImageView
+        android:id="@+id/videoType"
+        android:layout_width="112px"
+        android:layout_height="126px"
+        android:layout_x="90dp"
+        android:layout_y="45dp"
+        android:src="@drawable/new_ott_vod_sel" />
+
+    <TextView
+        android:id="@+id/filmName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="220dp"
+        android:layout_y="79dp"
+        android:background="#00000000"
+        android:gravity="center_vertical"
+        android:textColor="#000000"
+        android:textSize="27px" />
+
+    <RelativeLayout
+        android:layout_width="840px"
+        android:layout_height="351px"
+        android:layout_x="214dp"
+        android:layout_y="122dp"
+        android:background="@drawable/detail_bg" >
+
+        <ImageView
+            android:id="@+id/detail_videoPreView"
+            android:layout_width="225dp"
+            android:layout_height="300dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4px"
+            android:layout_marginTop="17px"
+            android:gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/default_image" />
+
+        <TextView
+            android:id="@+id/videoinfo_descripe"
+            android:layout_width="550dp"
+            android:layout_height="300dp"
+            android:layout_alignBottom="@+id/detail_videoPreView"
+            android:layout_alignTop="@+id/detail_videoPreView"
+            android:layout_marginLeft="247dp"
+            android:ellipsize="end"
+            android:lineSpacingExtra="7px"
+            android:lines="10"
+            android:nextFocusDown="@+id/play"
+            android:scrollbars="vertical"
+            android:textColor="@color/black"
+            android:textSize="19px" />
+        
+        <RelativeLayout
+            android:id="@+id/videoinfo_descripe_frame"
+            android:layout_width="615dp"
+            android:layout_height="348dp"
+            android:layout_marginLeft="7px"
+            android:visibility="gone"
+            android:layout_toRightOf="@+id/detail_videoPreView" >
+
+            <TextView
+                android:layout_width="3px"
+                android:layout_height="fill_parent"
+                android:background="#ff0000" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="3px"
+                android:background="#ff0000" />
+
+            <TextView
+                android:layout_width="3px"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="569px"
+                android:background="#ff0000" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="3px"
+                android:layout_marginTop="314px"
+                android:background="#ff0000" />
+            
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/play"
+        android:layout_width="128dp"
+        android:layout_height="63px"
+        android:layout_x="212dp"
+        android:layout_y="458dp"
+        android:background="@drawable/detai_play_button_background"
+        android:scaleType="fitXY"
+        android:src="@drawable/new_ott_detail_btn_play" />
+
+    <ImageButton
+        android:id="@+id/downLoader"
+        android:layout_width="128dp"
+        android:layout_height="63px"
+        android:layout_x="335dp"
+        android:layout_y="458dp"
+        android:background="@drawable/detai_play_button_background"
+        android:scaleType="fitXY"
+        android:src="@drawable/detail_download_button_src" />
+
+    <ImageButton
+        android:id="@+id/collect"
+        android:layout_width="128dp"
+        android:layout_height="63px"
+        android:layout_x="458dp"
+        android:layout_y="458dp"
+        android:background="@drawable/detai_play_button_background"
+        android:scaleType="fitXY"
+        android:src="@drawable/new_ott_detail_btn_favorite_n" />
+
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="144px"
+        android:layout_height="22px"
+        android:layout_x="95dp"
+        android:layout_y="513dp"
+        android:paddingLeft="14px"
+        android:text="@string/relate_list"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#3bd8ff"
+        android:textSize="19px"
+        android:textStyle="bold" />
+
+<!--     <FrameLayout
+        android:id="@+id/fragment_movie"
+        android:layout_width="951px"
+        android:layout_height="170px"
+        android:layout_x="165dp"
+        android:layout_y="545dp"
+        android:visibility="visible" /> -->
+
+    <FrameLayout
+        android:id="@+id/fragment_layout"
+        android:layout_width="951px"
+        android:layout_height="170px"
+        android:layout_x="165dp"
+        android:layout_y="545dp"
+        android:visibility="visible" >
+    </FrameLayout>
+
+    <ImageView
+        android:layout_width="159dp"
+        android:layout_height="63px"
+        android:layout_x="893dp"
+        android:layout_y="458dp"
+        android:background="@drawable/new_ott_detail_btn_hd_n" />
+
+    <Button
+        android:id="@+id/resolution"
+        android:layout_width="159dp"
+        android:layout_height="63px"
+        android:layout_x="893dp"
+        android:layout_y="458dp"
+        android:background="@drawable/detail_resoulte_button_bg"
+        android:gravity="center_vertical"
+        android:paddingLeft="30px"
+        android:text="@string/sd"
+        android:textColor="#000000"
+        android:textSize="19px"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/resolution_state"
+        android:layout_width="15px"
+        android:layout_height="11px"
+        android:layout_x="1008dp"
+        android:layout_y="485dp"
+        android:background="@drawable/new_ott_detail_hd_close"
+        android:clickable="false"
+        android:focusable="false" />
+
+</AbsoluteLayout>

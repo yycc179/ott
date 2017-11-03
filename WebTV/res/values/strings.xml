@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">WebTV</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+	<string name="sd">SD</string>
+	<string name="hd720">HD720</string>
+	<string name="hd1080">HD1080</string>
+	<string name="video">Video</string>
+	<string name="person">Person</string>
+	<string name="open_category">Open Category</string>
+	<string name="relate_list">"Related Video"</string>
+	<string name="not_support_live">Not support live!</string>
+	<string name="password">PassWord:</string>
+	<string name="userid">UserID:</string>
+	<string name="save_name">Save UserName and PassWord</string>
+	<string name="username_password_err">UserName or Password error</string>
+	<string name="ok">OK</string>
+	<string name="seek">Goto</string>
+	<string name="confirm">Confirm</string>
+	<string name="underline">_</string>
+	<string name="time_init">--:--:--/--:--:--</string>
+	<string name="colon">:</string>
+	<string name="hour">Hour</string>
+	<string name="min">Min</string>	
+	<string name="sec">Sec</string>
+	<string name="pageup">page+</string>
+	<string name="pagedown">page-</string>
+	<string name="vod">VOD</string>	
+	<string name="live">Live</string>	
+	<string name="history">History</string>		
+	<string name="fav">Favorite</string>	
+	<string name="time_format">--/--</string>
+	<string name="category">Category</string>
+	<string name="cancel_collect">Cancel collect!</string>
+	<string name="collect_success">Collect success!</string>
+	<string name="not_support_down">Not support now!</string>
+	<string name="none">None</string>
+	<string name="getextendinfo_fail">Loading Video Info Fail</string>
+	<string name="player_error">Play Error</string>
+	<string name="exitapp">Are you sure to exit?</string>
+	<string name="message">Message</string>
+	<string name="warning">Warning</string>
+	<string name="continue_play">Continue to last play?</string>
+	<string name="network_fail">Network connection fail!</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="no_category">No category information!</string>
+</resources>

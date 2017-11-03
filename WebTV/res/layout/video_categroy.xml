@@ -1,0 +1,85 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="1280px"
+    android:layout_height="720px"
+    android:background="#00000000">
+  <RelativeLayout  
+    android:layout_width="1280px"
+    android:layout_height="448px"
+    android:layout_marginTop="201px"
+    android:background="#9A000000">
+    </RelativeLayout>
+    
+<LinearLayout
+    android:layout_width="735px"
+    android:layout_height="468px"
+    android:layout_marginLeft="278px"
+    android:layout_marginTop="190px"
+    android:orientation="horizontal"
+    android:background="@drawable/new_category_bg"
+    >
+	
+    <ListView
+        android:id="@+id/OTT_Video_Category_Level1"
+        android:layout_width="330px"
+        android:layout_height="394px"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="10px"
+        android:divider="#00ffffff"
+        android:dividerHeight="4px"
+        android:drawSelectorOnTop="false"
+        android:fadeScrollbars="false"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollbarStyle="insideInset"
+     
+        android:listSelector="@drawable/listview_selector"
+        android:scrollbarThumbVertical="@drawable/common_scroll_2"
+        android:scrollbarTrackVertical="@drawable/common_scroll_1" />
+
+    <ListView
+        android:id="@+id/OTT_Video_Category_Level2"
+        android:layout_width="330px"
+        android:layout_height="394px"
+        android:layout_marginTop="10px"
+        android:divider="#00ffffff"
+        android:dividerHeight="4px"
+        android:drawSelectorOnTop="false"
+        android:scrollbarStyle="insideInset"
+        android:fadeScrollbars="false"
+        android:focusable="true"
+        android:listSelector="@drawable/listview_selector"
+        android:focusableInTouchMode="true"
+        android:scrollbarThumbVertical="@drawable/common_scroll_2"
+        android:scrollbarTrackVertical="@drawable/common_scroll_1" />
+
+    <ListView
+        android:id="@+id/OTT_Video_Category_Level3"
+        android:visibility="gone"
+        android:layout_width="330px"
+        android:layout_height="394px"
+        android:layout_marginTop="10px"
+        android:divider="#00ffffff"
+        android:dividerHeight="4px"
+        android:drawSelectorOnTop="false"
+        android:fadeScrollbars="false"
+        android:focusable="true"
+        
+        android:listSelector="@drawable/listview_selector"
+        android:focusableInTouchMode="true"
+        android:scrollbarStyle="insideInset"
+        android:scrollbarThumbVertical="@drawable/common_scroll_2"
+        android:scrollbarTrackVertical="@drawable/common_scroll_1" />
+
+</LinearLayout>
+<TextView 
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:text="@string/category"
+    	android:textSize="30px"
+    	android:textColor="#ffffff"
+        android:layout_marginLeft="580px"
+    	android:layout_marginTop="202px"
+    
+    />
+</RelativeLayout>

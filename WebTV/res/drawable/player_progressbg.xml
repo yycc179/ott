@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- 背景图，不可加clip属性，否则无显示效果 -->
+    <item android:id="@android:id/background">
+        <inset
+            android:insetBottom="5dip"
+            android:insetTop="5dip" >
+            <shape>
+                <corners android:radius="10dip" />
+                <solid android:color="#40ffffff" />
+            </shape>
+        </inset>
+    </item>
+     <!--    第一进度条，必须放在第二进度条的下面，否则会被第二进度条覆盖掉而看不到效果 -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <inset
+                android:insetBottom="5dip"
+                android:insetTop="5dip" >
+                <shape>
+                    <corners android:radius="10dip" />
+                    <solid android:color="#ff4094eb" />
+                </shape>
+            </inset>
+        </clip>
+    </item>
+<!--     第二进度条，增加inset属性可以避免thumb上下被挤压遮住，三处都要写 -->
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <inset
+                android:insetBottom="5dip"
+                android:insetTop="5dip" >
+                <shape>
+                    <corners android:radius="10dip" />
+                    <solid android:color="#ff8000ff" />
+                </shape>
+            </inset>
+        </clip>
+    </item>
+
+
+</layer-list>
+
+<!-- <?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+  <item android:id="@android:id/background">
+        <shape>
+            <gradient android:startColor="#ff202020" android:endColor="#ff202020" android:centerY="0.75" android:centerColor="#ff202020" />
+        </shape>
+    </item>
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <shape>
+                <gradient android:startColor="#ff6f6f6f" android:endColor="#ff6f6f6f" android:centerY="0.75" android:centerColor="#ff6f6f6f" />
+            </shape>
+        </clip>
+    </item>
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <gradient android:startColor="#ff6d9914" android:endColor="#ff6d9914" android:centerY="0.75" android:centerColor="#ff6d9914" />
+            </shape>
+        </clip>
+    </item>
+
+</layer-list> -->
+
+<!-- <?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape>
+            <gradient android:startColor="#ff202020" android:endColor="#ff202020" android:centerY="0.75" android:centerColor="#ff202020" />
+        </shape>
+    </item>
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <shape>
+                <gradient android:startColor="#ff6f6f6f" android:endColor="#ff6f6f6f" android:centerY="0.75" android:centerColor="#ff6f6f6f" />
+            </shape>
+        </clip>
+    </item>
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <gradient android:startColor="#ff6d9914" android:endColor="#ff6d9914" android:centerY="0.75" android:centerColor="#ff6d9914" />
+            </shape>
+        </clip>
+    </item>
+</layer-list> -->

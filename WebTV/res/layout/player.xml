@@ -1,0 +1,252 @@
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="1280px"
+    android:layout_height="720px"
+    android:background="#00256466" >
+
+    <SurfaceView
+        android:id="@+id/movieView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_x="0px"
+        android:layout_y="0px" >
+    </SurfaceView>
+
+    <AbsoluteLayout
+        android:id="@+id/Play_status"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_x="0px"
+        android:layout_y="0px"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/filmName"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_x="0dp"
+            android:layout_y="0dp"
+            android:background="@drawable/new_pb_titlebg"
+            android:gravity="center|left"
+            android:paddingLeft="30px"
+            android:textSize="23px" />
+
+        <ImageView
+            android:id="@+id/playstatus_img"
+            android:layout_width="126px"
+            android:layout_height="126px"
+            android:layout_x="577px"
+            android:layout_y="238px"
+            android:visibility="gone"
+            android:background="@drawable/new_ott_palyer_play_n" />
+
+        <RelativeLayout
+            android:layout_width="1280px"
+            android:layout_height="80px"
+            android:layout_x="0px"
+            android:layout_y="640px"
+            android:background="#cd000000" >
+
+            <TextView
+                android:id="@+id/play_time"
+                android:layout_width="wrap_content"
+                android:layout_height="35px"
+                android:layout_marginLeft="82px"
+                android:background="#00000000"
+                android:gravity="center"
+                android:text="@string/time_init"
+                android:textColor="#ffffff"
+                android:textSize="23px" />
+
+            
+            <SeekBar
+                android:id="@+id/play_progessbar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="1147px"
+                android:layout_height="28px"
+                android:layout_gravity="center"
+                android:layout_marginLeft="66px"
+                android:layout_marginTop="30px"
+                android:maxHeight="28px"
+                android:minHeight="28px"
+                android:max="100"
+                android:progressDrawable="@drawable/player_progressbg"
+                android:thumb="@drawable/seek_thumb_pressed"
+                android:visibility="visible" />
+        </RelativeLayout>
+    </AbsoluteLayout>
+
+    <AbsoluteLayout
+        android:id="@+id/play_info"
+        android:layout_width="fill_parent"
+        android:layout_height="266px"
+        android:layout_x="0px"
+        android:layout_y="454px"
+        android:background="@drawable/new_ott_player_bg"
+        android:visibility="gone" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="63px"
+            android:layout_x="0dp"
+            android:layout_y="18dp"
+             >
+
+            <RelativeLayout
+                android:layout_width="159dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="214dp" >
+
+                <ImageView
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/new_ott_detail_btn_hd_n" />
+
+                <Button
+                    android:id="@+id/play_resoulte"
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/detail_resoulte_button_bg"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="30px"
+                    android:text="@string/sd"
+                    android:textColor="#000000"
+                    android:textSize="19px"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/play_resoulte_state"
+                    android:layout_width="15px"
+                    android:layout_height="11px"
+                    android:layout_marginLeft="118dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/new_ott_detail_hd_close"
+                    android:clickable="false"
+                    android:focusable="false" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="159dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="367dp" >
+
+                <ImageView
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/new_ott_detail_btn_hd_n" />
+
+                <Button
+                    android:id="@+id/play_audio"
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/detail_resoulte_button_bg"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="30px"
+                    android:text="@string/none"
+                    android:textColor="#000000"
+                    android:textSize="19px"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/play_audio_state"
+                    android:layout_width="15px"
+                    android:layout_height="11px"
+                    android:layout_marginLeft="118dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/new_ott_detail_hd_close"
+                    android:clickable="false"
+                    android:focusable="false" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="159dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="522dp" >
+
+                <ImageView
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/new_ott_detail_btn_hd_n" />
+
+                <Button
+                    android:id="@+id/play_subtitle"
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/detail_resoulte_button_bg"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="30px"
+                    android:text="@string/none"
+                    android:textColor="#000000"
+                    android:textSize="19px"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/play_audio_state"
+                    android:layout_width="15px"
+                    android:layout_height="11px"
+                    android:layout_marginLeft="118dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/new_ott_detail_hd_close"
+                    android:clickable="false"
+                    android:focusable="false" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="159dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="907dp" >
+
+                <ImageView
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/new_ott_detail_btn_hd_n" />
+
+                <Button
+                    android:id="@+id/play_seek"
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/detail_resoulte_button_bg"
+                    android:gravity="center"
+                    android:text="@string/seek"
+                    android:textColor="#000000"
+                    android:textSize="21px"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="950px"
+            android:layout_height="2px"
+            android:layout_x="165px"
+            android:layout_y="80px"
+            android:background="@color/black" />
+
+        <ImageView
+            android:layout_width="950px"
+            android:layout_height="2px"
+            android:layout_x="165px"
+            android:layout_y="82px"
+            android:background="#373737" />
+
+        <FrameLayout
+            android:id="@+id/fragment_layout"
+            android:layout_width="951px"
+            android:layout_height="170px"
+            android:layout_x="165dp"
+            android:layout_y="91dp"
+            android:nextFocusRight="@+id/fragment_movie"
+            android:visibility="visible" />
+
+       <!--  <FrameLayout
+            android:id="@+id/fragment_serial"
+            android:layout_width="951px"
+            android:layout_height="170px"
+            android:layout_x="165dp"
+            android:layout_y="91dp"
+            android:nextFocusRight="@+id/fragment_serial"
+            android:visibility="visible" >
+        </FrameLayout> -->
+    </AbsoluteLayout>
+
+
+</AbsoluteLayout>

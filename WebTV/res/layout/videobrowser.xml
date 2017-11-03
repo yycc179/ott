@@ -1,0 +1,207 @@
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="1280px"
+    android:layout_height="720px"
+    android:background="@drawable/new_homemenu_bg" >
+
+    
+    <AbsoluteLayout
+        android:id="@+id/videobrowser"
+        android:layout_width="1280px"
+        android:layout_height="720px"
+        android:visibility="visible" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_x="209px"
+            android:layout_y="47px" >
+
+            <ImageButton
+                android:id="@+id/OTT_MainPage_VOD"
+                android:layout_width="158px"
+                android:layout_height="159px"
+                android:nextFocusLeft="@+id/OTT_MainPage_VOD"
+                android:background="@drawable/ott_mainpage_vod_select" />
+
+            <ImageButton
+                android:id="@+id/OTT_MainPage_LIVE"
+                android:layout_width="158px"
+                android:layout_height="159px"
+                android:layout_marginLeft="66px"
+                android:layout_toRightOf="@id/OTT_MainPage_VOD"
+                android:background="@drawable/ott_mainpage_live_select" />
+
+            <ImageButton
+                android:id="@+id/OTT_MainPage_HISTORY"
+                android:layout_width="158px"
+                android:layout_height="159px"
+                android:layout_marginLeft="66px"
+                android:layout_toRightOf="@id/OTT_MainPage_LIVE"
+                android:background="@drawable/ott_mainpage_history_select" />
+
+            <ImageButton
+                android:id="@+id/OTT_MainPage_FAV"
+                android:layout_width="158px"
+                android:layout_height="159px"
+                android:layout_marginLeft="66px"
+                android:layout_toRightOf="@id/OTT_MainPage_HISTORY"
+                android:background="@drawable/ott_mainpage_fav_select" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_x="217px"
+            android:layout_y="163px" >
+
+            <TextView
+                android:id="@+id/vod_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50px"
+                android:text="@string/vod"
+                android:textColor="@drawable/mainpage_title_textcolor"
+                android:textSize="21px" />
+
+            <TextView
+                android:id="@+id/live_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="182px"
+                android:layout_toRightOf="@id/vod_text"
+                android:text="@string/live"
+                android:textColor="@drawable/mainpage_title_textcolor"
+                android:textSize="21px" />
+
+            <TextView
+                android:id="@+id/history_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="175px"
+                android:layout_toRightOf="@id/live_text"
+                android:text="@string/history"
+                android:textColor="@drawable/mainpage_title_textcolor"
+                android:textSize="21px" />
+
+            <TextView
+                android:id="@+id/fav_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="150px"
+                android:layout_toRightOf="@id/history_text"
+                android:text="@string/fav"
+                android:textColor="@drawable/mainpage_title_textcolor"
+                android:textSize="21px" />
+        </RelativeLayout>
+
+       <RelativeLayout 
+            android:id="@+id/ott_content"
+            android:layout_width="1280px"
+            android:layout_height="360px"
+            android:layout_x="0px"
+            android:layout_y="271px"
+           >
+        <ImageView
+            android:id="@+id/IDC_GridView_video_pageback"
+            android:layout_width="22px"
+            android:layout_height="37px"
+            android:layout_marginLeft="40px"
+            android:layout_marginTop="146px"
+            android:background="@drawable/new_ott_prev"
+            android:visibility="gone" />
+
+        <GridView
+            android:id="@+id/IDC_GridView_video_mainpage_Grid"
+            android:layout_width="980dp"
+            android:layout_height="360dp"
+            android:layout_marginLeft="151dp"
+            android:layout_marginTop="6dp"
+            android:paddingLeft="8px"
+            android:horizontalSpacing="16px"
+            android:listSelector="#00000000"
+            android:verticalSpacing="16px"
+            android:visibility="visible" >
+        </GridView>
+
+        <ImageView
+            android:id="@+id/IDC_GridView_video_pagedown"
+            android:layout_width="22px"
+            android:layout_height="37px"
+            android:layout_marginLeft="1219px"
+            android:layout_marginTop="146px"
+            android:background="@drawable/new_ott_next"
+            android:visibility="gone" />
+
+        </RelativeLayout>
+        
+       
+        <TextView
+            android:id="@+id/OTT_Cur_select_path"
+            android:layout_width="1280px"
+            android:layout_height="wrap_content"
+            android:layout_x="0px"
+            android:layout_y="214px"
+            android:gravity="center"
+            android:textColor="#ffacac"
+            android:textSize="21px" />
+
+        
+          <TextView
+            android:id="@+id/OTT_VIDEO_PageNum"
+            android:layout_width="140px"
+            android:layout_height="wrap_content"
+            android:layout_x="1127px"
+            android:layout_y="214px"
+            android:gravity="center"
+            android:text="@string/time_format"
+            android:textColor="#a4d9fb"
+            android:textSize="21px" />
+		<ImageView 
+		    
+		    android:layout_width="64px"
+		    android:layout_height="28px"
+		    android:layout_x="42px"
+		    android:layout_y="670px"
+		    android:background="@drawable/new_guide_menu"
+		    />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10px"
+            android:layout_x="120px"
+            android:layout_y="670px"
+            android:gravity="left|center"
+            android:textColor="#000000"
+            android:text="@string/open_category"
+            android:textSize="21px" />
+
+
+
+        <ImageView
+            android:id="@+id/OTT_MainPage_Categroy"
+            android:layout_width="103px"
+            android:layout_height="60px"
+            android:layout_x="1045dp"
+            android:layout_y="11dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:nextFocusLeft="@+id/OTT_MainPage_FAV"
+            android:nextFocusDown="@+id/IDC_GridView_video_mainpage_Grid"
+            android:src="@drawable/ott_mainpage_category_select" />
+
+        <ImageView
+            android:id="@+id/OTT_MainPage_search"
+            android:layout_width="103px"
+            android:layout_height="60px"
+            android:layout_x="1141dp"
+            android:layout_y="11dp"
+            android:clickable="true"
+            android:focusable="true"
+             android:nextFocusDown="@+id/IDC_GridView_video_mainpage_Grid"
+            android:src="@drawable/ott_mainpage_search_select" />
+    </AbsoluteLayout>
+    
+
+</AbsoluteLayout>

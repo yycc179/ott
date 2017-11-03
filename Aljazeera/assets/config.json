@@ -1,0 +1,7 @@
+{
+    "name": "Aljazeera",
+    "parser": "com.webtv.aljazeera.Parser",
+    "search": true,
+    "live": true,
+    "login": false
+}

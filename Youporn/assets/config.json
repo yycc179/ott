@@ -1,0 +1,7 @@
+{
+    "name": "Youporn",
+    "parser": "com.webtv.youporn.Parser",
+    "search": true,
+    "live": false,
+    "login": false
+}

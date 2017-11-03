@@ -1,0 +1,39 @@
+{
+    "VOD": [
+        {
+            "title": "New Vidoes",
+            "childType": 2,
+ 			"url": "/"
+        },      
+        {
+            "title": "Top Rated",
+            "childType": 2,
+ 			"url": "/top_rated/"
+        },
+        {
+            "title": "Most Viewed",
+            "childType": 2,
+ 			"url": "/most_viewed/"
+        },  
+        {
+            "title": "Most Favorited",
+            "childType": 2,
+ 			"url": "/most_favorited/"
+        },
+        {
+            "title": "Most Discussed",
+            "childType": 2,
+ 			"url": "/most_discussed/"
+        }, 
+        {
+            "title": "Categories",
+            "childType": 0,
+ 			"url": "http://www.youporn.com"
+        },                 
+        {
+            "title": "Pornstars",
+            "childType": 1,
+ 			"url": "/pornstars/"
+        }               
+    ]
+}

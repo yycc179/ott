@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="583px"
+    android:layout_height="250px"
+    android:background="@drawable/new_ott_seekbg"
+   >
+    <TextView
+        android:id="@+id/seek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5px"
+        android:gravity="center"
+        android:text="@string/seek"
+        android:textColor="#ffffff"
+        android:textSize="24px" />
+    
+    
+    <RelativeLayout
+        android:id="@+id/seek_hour"
+        android:layout_width="78px"
+        android:layout_height="68px"
+        android:layout_marginLeft="44dp"
+        android:layout_marginTop="100px"
+        >
+
+        <Button 
+		    android:id="@+id/time_hour"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:background="@drawable/player_seek_timer_bg"
+		    android:textSize="24px"
+		    android:textColor="@drawable/search_button_for_textcolor"
+		    />
+        <TextView
+            android:id="@+id/seek_time1"
+            android:layout_width="wrap_content"
+            android:layout_height="25px"
+            android:layout_marginLeft="27dp"
+            android:layout_marginTop="32px"
+            android:gravity="bottom"
+            android:text="@string/underline"
+            android:textStyle="bold"
+            android:textColor="#b40000"
+            android:textSize="30px" 
+            android:visibility="visible"
+            />
+
+       <TextView
+            android:id="@+id/seek_time2"
+            android:layout_width="wrap_content"
+            android:layout_height="25px"
+            android:layout_marginLeft="38dp"
+            android:layout_marginTop="32px"
+            android:gravity="bottom"
+            android:text="@string/underline"
+            android:textStyle="bold"
+            android:textColor="#b40000"
+            android:textSize="30px"
+            android:visibility="gone"
+             />
+
+    </RelativeLayout>
+
+            <TextView
+        android:layout_width="15px"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/seek_hour"
+         android:layout_marginTop="120px"
+        android:gravity="center"
+        android:text="@string/colon"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:textSize="24px" />
+            
+    <RelativeLayout
+        android:id="@+id/seek_min"
+        android:layout_width="78px"
+        android:layout_height="68px"
+        android:layout_marginLeft="15px"
+        android:layout_marginTop="100px"
+        android:layout_toRightOf="@+id/seek_hour"
+         >
+		<Button 
+		    android:id="@+id/time_min"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:background="@drawable/player_seek_timer_bg"
+		    android:textSize="24px"
+		    android:paddingLeft="24dp"
+		    android:gravity="center|left"
+		    android:textColor="@drawable/search_button_for_textcolor"
+		    />
+        <TextView
+            android:id="@+id/seek_time3"
+            android:layout_width="wrap_content"
+            android:layout_height="25px"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="32px"
+            android:gravity="bottom"
+            android:text="@string/underline"
+            android:textStyle="bold"
+            android:textColor="#b40000"
+            android:textSize="30px" 
+            android:visibility="gone"
+            />
+
+       <TextView
+            android:id="@+id/seek_time4"
+            android:layout_width="wrap_content"
+            android:layout_height="25px"
+            android:layout_marginLeft="38dp"
+            android:layout_marginTop="32px"
+            android:gravity="bottom"
+            android:text="@string/underline"
+            android:textStyle="bold"
+            android:textColor="#b40000"
+            android:textSize="30px"
+            android:visibility="gone"
+             />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="15px"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/seek_min"
+         android:layout_marginTop="120px"
+        android:gravity="center"
+        android:text="@string/colon"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:textSize="24px" />
+    <RelativeLayout
+        android:id="@+id/seek_sec"
+        android:layout_width="78px"
+        android:layout_height="68px"
+        android:layout_marginLeft="15px"
+        android:layout_marginTop="100px"
+        android:layout_toRightOf="@+id/seek_min"
+        android:background="@drawable/player_seek_timer_bg" >
+
+		<Button 
+		    android:id="@+id/time_sec"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:background="@drawable/player_seek_timer_bg"
+		    android:textSize="24px"
+		    android:textColor="@drawable/search_button_for_textcolor"
+		    />
+        <TextView
+            android:id="@+id/seek_time5"
+            android:layout_width="wrap_content"
+            android:layout_height="25px"
+            android:layout_marginLeft="27dp"
+            android:layout_marginTop="32px"
+            android:gravity="bottom"
+            android:text="@string/underline"
+            android:textStyle="bold"
+            android:textColor="#b40000"
+            android:textSize="30px" 
+            android:visibility="gone"
+            />
+
+       <TextView
+            android:id="@+id/seek_time6"
+            android:layout_width="wrap_content"
+            android:layout_height="25px"
+            android:layout_marginLeft="38dp"
+            android:layout_marginTop="32px"
+            android:gravity="bottom"
+            android:text="@string/underline"
+            android:textStyle="bold"
+            android:textColor="#b40000"
+            android:textSize="30px"
+            android:visibility="gone"
+             />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/seek_ok"
+        android:layout_width="172px"
+        android:layout_height="62px"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="104px"
+        android:layout_toRightOf="@+id/seek_sec"
+        android:background="@drawable/search_button_select"
+        android:gravity="center"
+        android:text="@string/ok"
+        android:textColor="@drawable/search_button_for_textcolor"
+        android:textSize="24px" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/seek_hour"
+        android:layout_below="@+id/seek"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:text="@string/hour"
+        android:textColor="#000000"
+        android:textSize="24px" />
+    
+    
+     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/seek_min"
+        android:layout_below="@+id/seek"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:text="@string/min"
+        android:textColor="#000000"
+        android:textSize="24px" />
+     
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/seek_sec"
+        android:layout_below="@+id/seek"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:text="@string/sec"
+        android:textColor="#000000"
+        android:textSize="24px" />
+      
+      
+      <TextView
+        android:id="@+id/seek_totaltime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/seek_hour"
+        android:layout_below="@+id/seek"
+        android:layout_marginTop="150dp"
+        android:gravity="center"
+        android:textColor="#222222"
+        android:textSize="20px"
+          />
+
+</RelativeLayout>
