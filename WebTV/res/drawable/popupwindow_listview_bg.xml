@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     
- 	<item android:state_selected="true" android:drawable="@drawable/mainmenu_cursor"/>
- 	<item android:state_selected="false" android:drawable="@color/transparent_background"/>
+ 	<item android:state_selected="true" android:drawable="@drawable/popupwindow_listview_cursor"/>
+ 	<item android:state_hovered="true" android:drawable="@drawable/popupwindow_listview_hover"/>
+ 	<item android:drawable="@color/transparent_background"/>
  	
 </selector>

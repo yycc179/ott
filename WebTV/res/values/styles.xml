@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -32,6 +32,10 @@
         <item name="android:maxHeight">76dip</item>
     </style>
     
- 
-	
+   <!-- editVideoDialog -->
+   <style name="EditVideoTheme" parent="@android:style/Theme.Dialog">
+       <item name="android:windowBackground">@color/transparent_background</item>
+       <item name="android:windowNoTitle">false</item>
+   </style>
+    
 </resources>

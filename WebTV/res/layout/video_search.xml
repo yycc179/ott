@@ -13,10 +13,11 @@
         >
 
         <LinearLayout
+            android:id="@+id/search_text_bg"
             android:layout_width="872px"
             android:layout_height="42px"
-            android:visibility="visible"
             android:focusable="false"
+            android:visibility="visible"
             android:orientation="horizontal" >
 
             <ImageView
@@ -35,21 +36,18 @@
                 android:layout_height="fill_parent"
                 android:background="@drawable/search_edit_bg3" />
         </LinearLayout>
- <EditText
+        
+ 		<TextView
             android:id="@+id/OTT_Video_Edit_Search"
             android:layout_width="860px"
-            android:layout_height="30px"
-            android:layout_marginTop="6px"
+            android:layout_height="40px"
             android:layout_marginLeft="3px"
-            android:paddingBottom="1px"
-            android:background="@null"
             android:paddingLeft="14px"
-             android:textCursorDrawable="@drawable/cursor"
+            android:background="@drawable/keyboard_text_backgroup"
             android:singleLine="true"
+            android:focusable="true"
             android:textColor="@color/black"
-            android:imeOptions="actionDone"
-            android:inputType="textNoSuggestions"
-            android:maxLength="80"
+            android:maxLength="20"
             android:textSize="25px" />
 
     </RelativeLayout>

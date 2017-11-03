@@ -3,26 +3,27 @@ package com.ott.webtv;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-//import android.app.AlertDialog;
-//import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
-import android.view.View.OnTouchListener;
+import android.view.View.OnHoverListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
@@ -30,32 +31,30 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ott.webtv.core.ALParser;
 import com.ott.webtv.core.CategoryManager;
 import com.ott.webtv.core.ContentManager;
 import com.ott.webtv.core.CoreHandler;
-import com.ott.webtv.core.StoreManager;
-import com.ott.webtv.core.DataNode.Category;
 import com.ott.webtv.core.DataNode.Content;
 import com.ott.webtv.core.DataNode.DATA_TYPE;
-import com.ott.webtv.R;
+import com.ott.webtv.core.StoreManager;
 
+@SuppressLint("NewApi")
 public class VideoBrowser extends Activity implements OnItemClickListener,
-		OnClickListener {
+		OnClickListener, OnHoverListener {
 	private GridView gd = null;
-	private final int GRID_NUMCOL = 5;
-	private final int GRID_PAGECONTENTSIZE = GRID_NUMCOL * 2;
+	private static final int GRID_NUMCOL = 5;
+	public static final int GRID_PAGECONTENTSIZE = GRID_NUMCOL * 2;
 	public VideoGridAdapter gdAdapter;
 	public ImageView mImagePageLeft, mImagePageRight;
 	private ImageView mSearchButton;
-	private ImageView mCategroyButton;
+	// private ImageView mCategroyButton;
 	private ImageButton mVodButton, mLiveButton, mFavButton, mHistoryButton;
-	private TextView mPageCount, mCurSelectPath;
+	private TextView mPageCount, mCurSelectPath, mCategory;
 	// private AlertDialog bufferDialog;
 	// private View dialoglayout;
 
 	private int mTotalPage, mCurrentPageNum;
-
-	private ArrayList<HashMap<String, String>> urlList = new ArrayList<HashMap<String, String>>();
 
 	private category_popWindow category_window = null;
 	private SearchView search_window = null;
@@ -64,23 +63,26 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 	private String webName = "";
 
 	private String[] mDataSource = { "VOD", "Live", "History", "Favorite",
-			"Search" };
+			"Search/" };
+
+	private Map<Integer, Integer> mDataErrMsg;
 
 	private CoreHandler core;
 	private int mSourceType = SOURCE_TYPE.VOD.ordinal();
 
-	private CategoryManager mCategorymg;
-
 	private List<String> sSearchType;
 	private List<DATA_TYPE> dSearchType;
-	private Boolean bSearchEnable;
+	private Boolean bSearchEnable = false;
 	private Boolean bLiveEnable;
 
-	private Boolean bInContainer = false;
-	private int currentIndex;
+	private boolean turnToLeft = false;
 
-	private String currentPath;
-	private String lastPath;
+	private int currentIndex;
+	private int lastFavNum;
+
+	private static VideoBrowser videobrowsr;
+
+	private boolean bDataFromCategory = false;
 
 	public static enum SOURCE_TYPE {
 		VOD, LIVE, HISTORY, FAV, SEARCH
@@ -95,27 +97,17 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 		findViewById();
 		initData();
 		setViewListeners();
+		setOnHokeyClickListeners();
 
-		if (!core.isNetworkConnected(this)) {
-			pop_dialog.showWarning(
-					getResources().getString(R.string.network_fail),
-					new DialogInterface.OnClickListener() {
+		if (!CoreHandler.isNetworkConnected(this)) {
+			pop_dialog.showWarning(R.string.network_fail, eixtLister);
 
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
-							finish();
-						}
-
-					});
-
-		} else {
-			initMoudle();
+		} else if (initMoudle() != 0) {
+			pop_dialog.showWarning(R.string.init_fail, eixtLister);
 		}
-
 	}
 
-	private void initMoudle() {
+	private int initMoudle() {
 		Intent intent = getIntent();
 
 		String config = intent.getStringExtra("config");
@@ -125,41 +117,51 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 		String p_name = null;
 		Boolean bsearch = false;
 		Boolean needLogin = false;
-		try {
-			JSONObject jo = new JSONObject(config);
 
-			webName = jo.getString("name");
-			p_name = jo.getString("parser");
+		do {
+			try {
+				JSONObject jo = new JSONObject(config);
 
-			bLiveEnable = jo.getBoolean("live");
-			needLogin = jo.getBoolean("login");
-			bsearch = jo.getBoolean("search");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+				webName = jo.getString("name");
+				p_name = jo.getString("parser");
 
-		if (bsearch) {
-			sSearchType = new ArrayList<String>();
-			dSearchType = new ArrayList<DATA_TYPE>();
-			sSearchType.add("Search");
-			dSearchType.add(DATA_TYPE.VIDEO);
-		}
+				bLiveEnable = jo.getBoolean("live");
+				needLogin = jo.getBoolean("login");
+				bsearch = jo.getBoolean("search");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				break;
+			}
 
-		final String rootPath = getApplicationInfo().dataDir + "/" + webName;
+			if (bsearch) {
+				sSearchType = new ArrayList<String>();
+				dSearchType = new ArrayList<DATA_TYPE>();
+				sSearchType.add("Search");
+				dSearchType.add(DATA_TYPE.VIDEO);
+			} else {
+				mSearchButton.setVisibility(View.GONE);
+			}
 
-		core.initializeAll(parser, p_name, handlerNetCallBackData, rootPath,
-				GRID_PAGECONTENTSIZE);
+			if (core.initializeAll(parser, p_name, handlerNetCallBackData,
+					GRID_PAGECONTENTSIZE, this, webName) != 0) {
+				break;
+			}
 
-		core.loadCategory(cate);
+			if (needLogin) {
+				Intent i = new Intent(this, LoginView.class);
+				startActivityForResult(i, 0);
+			} else {
+				core.loadCategory(cate);
+				bDataFromCategory = true;
+				pop_dialog.showAnimation();
+			}
 
-		if (needLogin) {
-			Intent i = new Intent(this, LoginView.class);
-			startActivityForResult(i, 0);
-			return;
-		}
+			return 0;
 
-		pop_dialog.showAnimation();
+		} while (false);
+
+		return -1;
 	}
 
 	protected void addSearchType(String type, DATA_TYPE dataType) {
@@ -173,26 +175,120 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		super.onResume();
 		System.out.println("---- VideoBrowser -----onResume-----");
 		core.setHandler(handlerNetCallBackData);
-		if (gdAdapter != null && gd.getVisibility() == View.VISIBLE) {
-			gdAdapter.notifyDataSetChanged();
-		}
+		super.onResume();
+
 	}
 
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		super.onDestroy();
 		System.out.println("---- VideoBrowser -----onDestroy-----");
 		if (gdAdapter != null) {
 			gdAdapter.ClearCachePic();
 		}
 
 		if (core != null) {
-			System.out.println("------on destory -------");
 			core.finalizeAll();
+		}
+		super.onDestroy();
+	}
+
+	private void deleteSelectVideo(boolean isHistory) {
+		int pos = gd.getSelectedItemPosition();
+		int currentPosition = getPageStartIndex() + pos;
+
+		pop_dialog.closeEditVideoMenu();
+
+		StoreManager<Content> mgr = isHistory ? StoreManager.getHisManager()
+				: StoreManager.getFavManager();
+
+		mgr.remove(currentPosition);
+
+		int page = mgr.getTotalPage();
+
+		if (page <= 0) {
+			gdAdapter.clear();
+			updatePageInfo(0, 0);
+			curSelectButton.requestFocus();
+			return;
+		}
+
+		if (page < mCurrentPageNum) {
+			mCurrentPageNum = page;
+			if (pos == 0) {
+				pos = GRID_PAGECONTENTSIZE - 1;
+			}
+		}
+
+		gdAdapter.setGridParam(getCurrentList());
+		gd.setAdapter(gdAdapter);
+		gd.setSelection(pos);
+		updatePageInfo(mCurrentPageNum, page);
+
+	}
+
+	private void deleteAllVideo(final boolean isHistory) {
+		final StoreManager<Content> mgr = isHistory ? StoreManager
+				.getHisManager() : StoreManager.getFavManager();
+
+		pop_dialog.closeEditVideoMenu();
+
+		pop_dialog.showConfirm(R.string.editVideoWarning,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						mgr.clear();
+						gdAdapter.clear();
+						updatePageInfo(0, 0);
+						curSelectButton.requestFocus();
+					}
+				}, null);
+
+	}
+
+	private void updateListFormDetail(boolean isHistory, int mIndexInDetail) {
+		int pos = mIndexInDetail;
+		int page = 0;
+		if (!isHistory) {
+			StoreManager<Content> FavManager = StoreManager.getFavManager();
+
+			do {
+				page = FavManager.getTotalPage();
+				if (page <= 0) {
+					updatePageInfo(page, page);
+					mFavButton.setSelected(false);
+					mFavButton.requestFocus();
+					break;
+				}
+
+				int index = getPageStartIndex() + mIndexInDetail;
+				int size = FavManager.getList().size();
+				int del = lastFavNum - size;
+
+				if (del == 0) {
+					break;
+				}
+
+				if (page < mCurrentPageNum) {
+					// updatePageInfo(page, page);
+					mCurrentPageNum = page;
+					if (pos == 0) {
+						pos = GRID_PAGECONTENTSIZE - 1;
+					}
+				} else if (index > size) {
+					pos -= del;
+				}
+
+			} while (false);
+		}
+
+		gdAdapter.setGridParam(getCurrentList());
+		gd.setAdapter(gdAdapter);
+		// gdAdapter.notifyDataSetChanged();
+		gd.setSelection(pos);
+		if (!isHistory) {
+			updatePageInfo(page, page);
 		}
 	}
 
@@ -207,8 +303,21 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 		if (data != null) {
 			if (requestCode == 100) {
 				if (gd.getCount() > 0) {
-					gd.setSelection(data.getIntExtra("indexInDetail", 0));
-					gdAdapter.notifyDataSetChanged();
+					int mIndexInDetail = data.getIntExtra("indexInDetail", 0);
+					if (gd.getCount() != 0 && gdAdapter != null) {
+						if (mSourceType == SOURCE_TYPE.FAV.ordinal()) {
+							// for not update the videolist after delete fav in
+							// detail page
+							updateListFormDetail(false, mIndexInDetail);
+						} else if (mSourceType == SOURCE_TYPE.HISTORY.ordinal()) {
+							updateListFormDetail(true, mIndexInDetail); // for
+																		// manstis
+																		// 0239743
+						} else {
+							gd.setSelection(mIndexInDetail);
+							gdAdapter.notifyDataSetChanged();
+						}
+					}
 				}
 			} else {
 				core.setHandler(handlerNetCallBackData);
@@ -217,11 +326,16 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 					finish();
 				} else if (data.getBooleanExtra("LoginSuccess", false)) {
 					pop_dialog.showAnimation();
-					core.loadContentPage(CategoryManager.SOURCE_TYPE.VOD, null);
+					String cate = getIntent().getStringExtra("category");
+					core.loadCategory(cate);
+					bDataFromCategory = true;
+					pop_dialog.showAnimation();
+					// core.loadContentPage(CategoryManager.SOURCE_TYPE.VOD,
+					// null);
 				}
 			}
 		} else {
-			System.out.println("------data = null -------");
+			System.out.println("----onActivityResult-----data = null -------");
 		}
 	}
 
@@ -230,7 +344,7 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 		mImagePageRight = (ImageView) findViewById(R.id.IDC_GridView_video_pagedown);
 		mSearchButton = (ImageView) findViewById(R.id.OTT_MainPage_search);
 		mVodButton = (ImageButton) findViewById(R.id.OTT_MainPage_VOD);
-		// mVodButton.setNextFocusUpId(R.id.OTT_MainPage_VOD);
+		mVodButton.setNextFocusUpId(R.id.OTT_MainPage_VOD);
 		mLiveButton = (ImageButton) findViewById(R.id.OTT_MainPage_LIVE);
 		mLiveButton.setNextFocusUpId(R.id.OTT_MainPage_LIVE);
 		mFavButton = (ImageButton) findViewById(R.id.OTT_MainPage_FAV);
@@ -239,32 +353,50 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 		mHistoryButton.setNextFocusUpId(R.id.OTT_MainPage_HISTORY);
 		mPageCount = (TextView) findViewById(R.id.OTT_VIDEO_PageNum);
 		mCurSelectPath = (TextView) findViewById(R.id.OTT_Cur_select_path);
-		mCategroyButton = (ImageView) findViewById(R.id.OTT_MainPage_Categroy);
+		mCategory = (TextView) findViewById(R.id.home_hotkey_category);
 		gd = (GridView) findViewById(R.id.IDC_GridView_video_mainpage_Grid);
 		gd.setNumColumns(GRID_NUMCOL);
-		lastFocusButton = mVodButton;
 	}
 
 	private void setViewListeners() {
+		gd.setOnHoverListener(this);
 		mSearchButton.setOnClickListener(this);
-		mCategroyButton.setOnClickListener(this);
+		mSearchButton.setOnHoverListener(this);
+		// mCategroyButton.setOnClickListener(this);
+		mVodButton.setOnClickListener(this);
+		mVodButton.setOnHoverListener(this);
 		mVodButton.setOnClickListener(this);
 		mLiveButton.setOnClickListener(this);
+		mLiveButton.setOnHoverListener(this);
 		mHistoryButton.setOnClickListener(this);
+		mHistoryButton.setOnHoverListener(this);
 		mFavButton.setOnClickListener(this);
+		mFavButton.setOnHoverListener(this);
 		gd.setOnItemClickListener(this);
-		GuestSupport gs = new GuestSupport();
-		gd.setOnTouchListener(gs.onTouchListener);
+		// GuestSupport gs = new GuestSupport();
+		// gd.setOnTouchListener(gs.onTouchListener);
+		mImagePageLeft.setOnClickListener(pageClickListener);
+		mImagePageRight.setOnClickListener(pageClickListener);
 
 		mFavButton.setOnFocusChangeListener(buttonFocusChange);
 		mVodButton.setOnFocusChangeListener(buttonFocusChange);
 		mLiveButton.setOnFocusChangeListener(buttonFocusChange);
 		mHistoryButton.setOnFocusChangeListener(buttonFocusChange);
 		mSearchButton.setOnFocusChangeListener(buttonFocusChange);
-		mCategroyButton.setOnFocusChangeListener(buttonFocusChange);
-		lastFocusButton.setOnFocusChangeListener(buttonFocusChange);
+		// mCategroyButton.setOnFocusChangeListener(buttonFocusChange);
+		// curSelectButton.setOnFocusChangeListener(buttonFocusChange);
 
-		// pop_dialog.setListener(dialogBackListener, cancelTaskListener);
+	}
+
+	private void setOnHokeyClickListeners() {
+		HoverEventManager hoverEvent = new HoverEventManager(VideoBrowser.this);
+		SparseArray<KeyEvent> hotKeyMap = new SparseArray<KeyEvent>();
+
+		hotKeyMap.put(R.id.home_hotkey_category, new KeyEvent(
+				KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MENU));
+		hotKeyMap.put(R.id.home_hotkey_exit, new KeyEvent(KeyEvent.ACTION_DOWN,
+				KeyEvent.KEYCODE_BACK));
+		hoverEvent.setHotkeyClickListener(hotKeyMap);
 	}
 
 	private void setButtonStatesUnSelect() {
@@ -273,64 +405,68 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 		mHistoryButton.setSelected(false);
 		mFavButton.setSelected(false);
 		mSearchButton.setSelected(false);
-		mCategroyButton.setSelected(false);
+		// mCategroyButton.setSelected(false);
 	}
 
 	public void doForPopWindowBack() {
 
 		// back from category,search,popmsg display the last status.
 		setButtonStatesUnSelect();
-		lastFocusButton.setSelected(true);
+		curSelectButton.setSelected(true);
 		if (gd.getCount() > 0) {
 			gd.requestFocus();
 			gd.setSelection(0);
 		} else {
-			lastFocusButton.setSelected(false);
-			lastFocusButton.requestFocus();
+			curSelectButton.setSelected(false);
+			curSelectButton.requestFocus();
 		}
 	}
 
+	@SuppressLint("UseSparseArrays")
 	private void initData() {
 		// TODO Auto-generated method stub
 		mCurrentPageNum = 0;
 
-		gdAdapter = new VideoGridAdapter();
+		videobrowsr = this;
+		gdAdapter = new VideoGridAdapter(gd, this);
 
 		category_window = new category_popWindow(VideoBrowser.this);
 		search_window = new SearchView(VideoBrowser.this);
 
 		pop_dialog = new PopDialog(VideoBrowser.this, cancelTaskListener);
 
-		mCategorymg = CategoryManager.getInstace();
 		core = CoreHandler.getInstace();
+
+		mDataErrMsg = new HashMap<Integer, Integer>();
+		mDataErrMsg.put(ALParser.PARSE_IOERROR, R.string.err_io);
+		mDataErrMsg.put(ALParser.PARSE_ERROR, R.string.err_parse);
+		mDataErrMsg.put(ALParser.PARSE_NORESULT, R.string.err_no_reslut);
 
 	}
 
-	private void updateGridViewInfo(String[] urlPic, String[] title) {
-		urlList.clear();
-		if (urlPic != null) {
-			for (int i = 0; i < urlPic.length; i++) {
-				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("picUrl", urlPic[i]);
-				map.put("videoName", title[i]);
-				urlList.add(map);
-			}
+	private void updateGridViewInfo(List<Content> list) {
+		List<Content> tmp = list;
+
+		if (tmp == null && (tmp = getCurrentList()) == null) {
+			return;
 		}
 
-		gdAdapter.setGridParam(VideoBrowser.this, urlList,
-				GRID_PAGECONTENTSIZE, 1);
+		gdAdapter.setGridParam(tmp);
 		gd.setAdapter(gdAdapter);
 
-		if (urlList.size() > 0) {
+		if (tmp.size() > 0) {
 			gd.requestFocus();
 		}
 
+		int pos = 0;
 		if (turnToLeft == true) {
-			gd.setSelection(GRID_NUMCOL - 1);
-			turnToLeft = false;
-		} else {
-			gd.setSelection(0);
+			pos = GRID_NUMCOL - 1;
+			if (gdAdapter.getCount() < GRID_NUMCOL) {
+				pos = gdAdapter.getCount() - 1;
+			}
 		}
+
+		gd.setSelection(pos);
 	}
 
 	private void updatePathInfo(String path) {
@@ -339,26 +475,30 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 			s += path;
 		}
 		mCurSelectPath.setText(s);
-		lastPath = currentPath = path;
 	}
 
 	private void updatePageInfo(int currentPage, int totalPage) {
 
-		mPageCount.setText(currentPage + "/" + totalPage);
+		if (totalPage == 0 && gdAdapter.getCount() > 0) {
+			mPageCount.setText(currentPage + "/" + "--");
+		} else {
+			mPageCount.setText(currentPage + "/" + totalPage);
+		}
+
 		mCurrentPageNum = currentPage;
 		mTotalPage = totalPage;
 
 		mImagePageLeft.setVisibility(View.VISIBLE);
 		mImagePageRight.setVisibility(View.VISIBLE);
 
-		if (mTotalPage <= 1) {
+		if (gdAdapter.getCount() == 0 || mTotalPage == 1) {
 			mImagePageLeft.setVisibility(View.GONE);
 			mImagePageRight.setVisibility(View.GONE);
-		} else if (mCurrentPageNum <= 1) {
+
+		} else if (mTotalPage == 0 && currentPage == 1) {
 			mImagePageLeft.setVisibility(View.GONE);
-		} else if (mCurrentPageNum >= mTotalPage) {
-			mImagePageRight.setVisibility(View.GONE);
 		}
+
 	}
 
 	@SuppressLint("HandlerLeak")
@@ -366,35 +506,85 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 		public void handleMessage(Message msg) {
 			if (msg.what == CoreHandler.Callback.CBK_GET_CATEGORY_DONE
 					.ordinal()) {
-				core.loadContentPage(CategoryManager.SOURCE_TYPE.VOD, null);
-				mVodButton.setSelected(true);
-				gd.requestFocus();
+				if (CategoryManager.containVod()) {
+					if (!CategoryManager.containLive()) {
+						mLiveButton.setBackground(getResources().getDrawable(
+								R.drawable.homepage_live_unsupport));
+						((TextView) findViewById(R.id.live_text))
+								.setTextColor(Color.GRAY);
+						mLiveButton.setFocusable(false);
+						mLiveButton.setClickable(false);
+					}
+					mVodButton.setSelected(true);
+					lastSelectButton = curSelectButton = mVodButton;
+					mSourceType = SOURCE_TYPE.VOD.ordinal();
+					core.loadContentPage(CategoryManager.SOURCE_TYPE.VOD, null);
+					updatePathInfo(null);
+				} else if (CategoryManager.containLive()) {
+					mVodButton.setFocusable(false);
+					mVodButton.setClickable(false);
+					mVodButton.setBackground(getResources().getDrawable(
+							R.drawable.homepage_vod_unsupport));
+					((TextView) findViewById(R.id.vod_text))
+							.setTextColor(Color.GRAY);
+
+					mLiveButton.setSelected(true);
+					lastSelectButton = curSelectButton = mLiveButton;
+					mSourceType = SOURCE_TYPE.LIVE.ordinal();
+					core.loadContentPage(CategoryManager.SOURCE_TYPE.LIVE, null);
+				}
+				// gd.requestFocus();
 			} else if (msg.what == CoreHandler.Callback.CBK_GET_CONTENT_FAIL
 					.ordinal()) {
+				bDataFromCategory = false;
 				pop_dialog.closeAnimation();
-				updatePathInfo(currentPath);
-				pop_dialog.showWarning("" + msg.obj, focusChangeLister);
+				
+				if(curSelectButton != lastSelectButton){
+					gdAdapter.clear();
+					updatePageInfo(0, 0);
+					updatePathInfo(null);
+					mCategory.setVisibility(View.VISIBLE);
+					mCategory.setText(R.string.hint_category);	
+					lastSelectButton = curSelectButton;
+				}
+				
+				if (!WebManager.reportBug(msg.arg2, msg.what,
+						(Content) msg.obj, null)) {
+					pop_dialog.showWarning(mDataErrMsg.get(msg.arg2),
+							null);
+				}
+
 			} else if (msg.what == CoreHandler.Callback.CBK_GET_CATEGORY_FAIL
 					.ordinal()) {
 				pop_dialog.closeAnimation();
 
 			} else if (msg.what == CoreHandler.Callback.CBK_CANCEL_CMOMAND
 					.ordinal()) {
-				setButtonStatesUnSelect();
-				if (msg.arg1 == 1) {
-					lastFocusButton.requestFocus();
-				} else {
-					lastFocusButton.setSelected(true);
-					gd.requestFocus();
-				}
+
 
 			} else if (msg.what == CoreHandler.Callback.CBK_GET_CONTENT_DONE
 					.ordinal()) {
+				bDataFromCategory = false;
 				pop_dialog.closeAnimation();
+
+				if (curSelectButton != lastSelectButton) {
+					mCategory.setVisibility(View.VISIBLE);
+					mCategory.setText(R.string.hint_category);
+					lastSelectButton = curSelectButton;
+				}
+
 				ContentManager mgr = ContentManager.getCurrent();
-				updateGridViewInfo(mgr.getPicURLs(), mgr.getTitles());
+				updateGridViewInfo(mgr.getCurrentList());
 				updatePageInfo(mgr.getCurrentPage(), mgr.getTotalPage());
-				updatePathInfo(currentPath);
+				updatePathInfo(mgr.getCurrentPath());
+
+			} else if (msg.what == CoreHandler.Callback.CBK_NETWORK_CONNECT_FAIL
+					.ordinal()) {
+				pop_dialog.closeAnimation();
+				pop_dialog.showWarning(R.string.network_fail, null);
+			} else if (msg.what == CoreHandler.Callback.CBK_REPORT_BUG_DONE
+					.ordinal()) {
+				pop_dialog.showToast(R.string.report_ok);
 			}
 		}
 	};
@@ -403,93 +593,87 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 		gdAdapter.CancleTask();
 	}
 
-	private void turnToNextPage(int mCurrentPageNum) {
-		mImagePageRight.setVisibility(View.VISIBLE);
-		mImagePageLeft.setVisibility(View.VISIBLE);
-		mPageCount.setText(mCurrentPageNum + "/" + mTotalPage);
-
-		if (mCurrentPageNum >= mTotalPage) {
-			mImagePageRight.setVisibility(View.GONE);
-		}
-		if (mCurrentPageNum > 1) {
-			mImagePageLeft.setVisibility(View.VISIBLE);
-		}
-		gdAdapter.setGridParam(VideoBrowser.this, urlList,
-				GRID_PAGECONTENTSIZE, mCurrentPageNum);
-		gd.setAdapter(gdAdapter);
-		gd.requestFocus();
-		if (turnToLeft == true) {
-			gd.setSelection(GRID_NUMCOL - 1);
-			turnToLeft = false;
-		} else {
-			gd.setSelection(0);
-		}
-	}
-
-	private boolean turnToLeft = false;
-
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
+
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
-			if (lastFocusButton == mVodButton || (bLiveEnable && lastFocusButton == mLiveButton) ) {
+			if (curSelectButton == mVodButton
+					|| (bLiveEnable && curSelectButton == mLiveButton)) {
 				category_window.showCategoryPopWindow();
-			} else {
-				pop_dialog.showToast(R.string.no_category);
+
+			} else if (curSelectButton == mFavButton && gd.hasFocus()) {
+				if (StoreManager.getFavManager().getList().size() > 0) {
+
+					boolean isMouse = gd.getSelectedItemPosition() < 0;
+					pop_dialog.showEditVideoMenu(R.string.editFavoriteTitle,
+							isMouse, new android.view.View.OnClickListener() {
+								@Override
+								public void onClick(View arg0) {
+									deleteSelectVideo(false);
+								}
+							}, new android.view.View.OnClickListener() {
+								@Override
+								public void onClick(View arg0) {
+									deleteAllVideo(false);
+								}
+							});
+				}
+
+			} else if (curSelectButton == mHistoryButton && gd.hasFocus()) {
+				if (StoreManager.getHisManager().getList().size() > 0) {
+
+					boolean isMouse = gd.getSelectedItemPosition() < 0;
+					pop_dialog.showEditVideoMenu(R.string.editHistoryTitle,
+							isMouse, new android.view.View.OnClickListener() {
+								@Override
+								public void onClick(View arg0) {
+									deleteSelectVideo(true);
+								}
+							}, new android.view.View.OnClickListener() {
+								@Override
+								public void onClick(View arg0) {
+									deleteAllVideo(true);
+								}
+							});
+				}
+
 			}
 		} else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
 			if (gd.hasFocus()) {
-				if ((gd.getSelectedItemPosition() % GRID_NUMCOL == GRID_NUMCOL - 1)
-						&& (mCurrentPageNum < mTotalPage)) {
-					turnToLeft = false;
-					if (mSourceType == SOURCE_TYPE.VOD.ordinal()
-							|| mSourceType == SOURCE_TYPE.LIVE.ordinal()
-							|| mSourceType == SOURCE_TYPE.SEARCH.ordinal()) {
-						stopLoadPic();
-						core.loadPageList(mCurrentPageNum + 1);
-						pop_dialog.showAnimation();
-					} else {
-						mCurrentPageNum++;
-						turnToNextPage(mCurrentPageNum);
-					}
+				int pos = gd.getSelectedItemPosition();
+				if ((pos == GRID_NUMCOL - 1 || pos == gdAdapter.getCount() - 1)) {
+					updateNextPage(false);
 				}
 				return true;
 			}
 		} else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-
 			if (gd.hasFocus()) {
-				if ((gd.getSelectedItemPosition() % GRID_NUMCOL == 0)
-						&& (mCurrentPageNum > 1)) {
-					turnToLeft = true;
-					if (mSourceType == SOURCE_TYPE.VOD.ordinal()
-							|| mSourceType == SOURCE_TYPE.LIVE.ordinal()
-							|| mSourceType == SOURCE_TYPE.SEARCH.ordinal()) {
-						stopLoadPic();
-						core.loadPageList(mCurrentPageNum - 1);
-						pop_dialog.showAnimation();
-						return true;
-					} else {
-						mCurrentPageNum--;
-						turnToNextPage(mCurrentPageNum);
-					}
+				if ((gd.getSelectedItemPosition() % GRID_NUMCOL == 0)) {
+					updateNextPage(true);
 				}
 				return true;
 			}
 		} else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-			lastFocusButton.setSelected(true);
+			curSelectButton.setSelected(true);
+		} else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+			setButtonStatesUnSelect();
+			curSelectButton.requestFocus();
 		} else if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (bInContainer) {
-				bInContainer = false;
+			if (ContentManager.getCurrentLevel() > 1
+					&& mSourceType != SOURCE_TYPE.HISTORY.ordinal()
+					&& mSourceType != SOURCE_TYPE.FAV.ordinal()) {
+				core.cancleTask();
 
 				ContentManager mgr = ContentManager.getLast();
 
-				updateGridViewInfo(mgr.getPicURLs(), mgr.getTitles());
+				updateGridViewInfo(mgr.getCurrentList());
 				updatePageInfo(mgr.getCurrentPage(), mgr.getTotalPage());
-				updatePathInfo(lastPath);
+				updatePathInfo(mgr.getCurrentPath());
 
 				gd.setSelection(currentIndex);
 				gd.requestFocus();
-
+				return true;
 			} else {
 				pop_dialog.showConfirm(R.string.exitapp,
 						new DialogInterface.OnClickListener() {
@@ -514,91 +698,189 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 		Intent intent = new Intent();
 		intent.setClass(VideoBrowser.this, DetaiInfoView.class);
 
-		if (ContentManager.getCurrent() != null) {
+		if (ContentManager.getCurrent() != null
+				&& (mSourceType != SOURCE_TYPE.HISTORY.ordinal() && mSourceType != SOURCE_TYPE.FAV
+						.ordinal())) {
 			Content currentIndexContent = ContentManager.getCurrent().getNode(
 					arg2);
-			if (currentIndexContent.getContentType() == DATA_TYPE.CONTAINER) {
+			if (currentIndexContent.getContentType() == DATA_TYPE.CONTAINER
+					&& currentIndexContent.getPlayFlag()) {
 				pop_dialog.showAnimation();
-				bInContainer = true;
 				currentIndex = arg2;
-				currentPath += currentIndexContent.toString();
-				core.loadContentPage(CategoryManager.SOURCE_TYPE.VOD,
-						currentIndexContent);
+				core.loadContentPage(null, currentIndexContent);
 				return;
+
+			} else {
+				if (currentIndexContent.getPlayFlag() == false) {
+					pop_dialog.showWarning(R.string.not_support_play,
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// TODO Auto-generated method stub
+								}
+
+							});
+					return;
+				}
 			}
 		}
+
+		if (mSourceType == SOURCE_TYPE.FAV.ordinal()) {
+			lastFavNum = StoreManager.getFavManager().getList().size();
+		}
+
 		intent.putExtra("sourceType", mSourceType); // vod live hsitory fav
 		// intent.putExtra("VideoInfo", currentIndexContent);
+		// intent.putExtra("curpagenum", mCurrentPageNum - 1);
+		intent.putExtra("pageStart", getPageStartIndex());
 		intent.putExtra("selectIndex", arg2); // the current index of selected
-		intent.putExtra("filePath", mCurSelectPath.getText().toString());
+		// intent.putExtra("filePath", mCurSelectPath.getText().toString());
 
-		intent.putExtra("curPageList", gdAdapter.getCurPageContent());
 		startActivityForResult(intent, 100);
 	}
 
-	private View lastFocusButton;
+	public int getPageStartIndex() {
+		return (mCurrentPageNum - 1) * GRID_PAGECONTENTSIZE;
+	}
+
+	public static VideoBrowser getInstance() {
+		return videobrowsr;
+	}
+
+	protected List<Content> getCurrentList() {
+		List<Content> out = null;
+
+		do {
+			if (mSourceType == SOURCE_TYPE.FAV.ordinal()) {
+				out = StoreManager.getFavManager().getList();
+
+			} else if (mSourceType == SOURCE_TYPE.HISTORY.ordinal()) {
+				out = StoreManager.getHisManager().getList();
+
+			} else {
+				out = ContentManager.getCurrent().getCurrentList();
+				break;
+			}
+
+			if (out.size() == 0) {
+				break;
+			}
+
+			int pageStartIndex = (mCurrentPageNum - 1) * GRID_PAGECONTENTSIZE;
+			int endIndex = pageStartIndex + GRID_PAGECONTENTSIZE;
+
+			if (endIndex > out.size()) {
+				endIndex = out.size();
+
+				if (endIndex == pageStartIndex) {
+					pageStartIndex -= GRID_PAGECONTENTSIZE;
+				}
+			}
+
+			out = new ArrayList<Content>(out.subList(pageStartIndex, endIndex));
+
+		} while (false);
+
+		return out;
+	}
+
+	private View curSelectButton;
+	private View lastSelectButton;
 
 	@Override
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
-		//setButtonStatesUnSelect();
-		lastFocusButton.setSelected(false);
-		arg0.setSelected(true);
-		
+		// setButtonStatesUnSelect();
+		lastSelectButton = curSelectButton;
+		curSelectButton = arg0;
+
+		lastSelectButton.setSelected(false);
+		lastSelectButton.setHovered(false);
+		curSelectButton.setSelected(true);
+
 		if (arg0.getId() == R.id.OTT_MainPage_search) {
 			System.out.println("------ on click  search ------");
+			mCategory.setVisibility(View.GONE);
 			search_window.showSearchPopWindow(sSearchType, dSearchType);
 			return;
-		} else if (arg0.getId() == R.id.OTT_MainPage_Categroy) {
-			System.out.println("------ on click  Categroy ------");
-			if (lastFocusButton == mVodButton || lastFocusButton == mLiveButton) {
-				lastFocusButton.setSelected(true);
-				category_window.showCategoryPopWindow();
-			} else {
-				pop_dialog.showToast(R.string.no_category);
-			}
-			return;
+
 		} else if (arg0.getId() == R.id.OTT_MainPage_VOD) {
 			updateVodInfo();
-			
+
 		} else if (arg0.getId() == R.id.OTT_MainPage_LIVE) {
 			updateLiveInfo();
 
 		} else if (arg0.getId() == R.id.OTT_MainPage_HISTORY) {
+			// mCategory.setVisibility(View.GONE);
+			mCategory.setVisibility(View.VISIBLE);
+			mCategory.setText(R.string.hint_edit);
 			updateHistoryInfo(arg0);
-			
+
 		} else if (arg0.getId() == R.id.OTT_MainPage_FAV) {
+			// mCategory.setVisibility(View.GONE);
+			mCategory.setVisibility(View.VISIBLE);
+			mCategory.setText(R.string.hint_edit);
 			updateFavInfo(arg0);
-			
+
 		}
-		lastFocusButton = arg0;
+	}
+
+	private void updateNextPage(Boolean toLeft) {
+		int page = toLeft == true ? mCurrentPageNum - 1 : mCurrentPageNum + 1;
+
+		if ((mTotalPage == 0 && page == 0) || mTotalPage == 1) {
+			return;
+
+		} else if (mTotalPage > 1) {
+			if (page < 1) {
+				page = mTotalPage;
+			} else if (page > mTotalPage) {
+				page = 1;
+			}
+		}
+
+		turnToLeft = toLeft;
+		stopLoadPic();
+
+		if (mSourceType == SOURCE_TYPE.HISTORY.ordinal()
+				|| mSourceType == SOURCE_TYPE.FAV.ordinal()) {
+			mCurrentPageNum = page;
+			gdAdapter.setGridParam(getCurrentList());
+			gdAdapter.notifyDataSetChanged();
+			updatePageInfo(mCurrentPageNum, mTotalPage);
+			// gd.setAdapter(gdAdapter);
+			gd.requestFocus();
+			if (turnToLeft == true) {
+				gd.setSelection(GRID_NUMCOL - 1);
+				turnToLeft = false;
+			} else {
+				gd.setSelection(0);
+			}
+
+		} else {
+			core.loadPageList(page);
+			pop_dialog.showAnimation();
+		}
+
 	}
 
 	private void updateVodInfo() {
 		mSourceType = SOURCE_TYPE.VOD.ordinal();
-		clearDisplay();
-		pop_dialog.showAnimation();
 
 		category_window.clearSelecPosition();
 
 		core.loadContentPage(CategoryManager.SOURCE_TYPE.VOD, null);
-
+		pop_dialog.showAnimation();
 	}
 
 	private void updateLiveInfo() {
 		category_window.clearSelecPosition();
 		mSourceType = SOURCE_TYPE.LIVE.ordinal();
-		clearDisplay();
-		
-		if (bLiveEnable) {
-			pop_dialog.showAnimation();
-			core.loadContentPage(CategoryManager.SOURCE_TYPE.LIVE, null);
-		} else {
-			pop_dialog.showWarning(
-					getResources().getString(R.string.not_support_live),
-					focusChangeLister);
-		}
 
+		core.loadContentPage(CategoryManager.SOURCE_TYPE.LIVE, null);
+		pop_dialog.showAnimation();
 	}
 
 	private void updateHistoryInfo(View view) {
@@ -608,17 +890,15 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 		StoreManager<Content> historyManager = StoreManager.getHisManager();
 
 		int page = historyManager.getTotalPage();
-
 		if (page <= 0) {
 			view.setSelected(false);
 			view.requestFocus();
 		}
-
-		updateGridViewInfo(historyManager.getPicURLs(),
-				historyManager.getTitles());
-
-		updatePageInfo(page > 0 ? 1 : 0, page);
+		mCurrentPageNum = page > 0 ? 1 : 0;
+		updateGridViewInfo(null);
+		updatePageInfo(mCurrentPageNum, page);
 		updatePathInfo(null);
+
 	}
 
 	private void updateFavInfo(View view) {
@@ -631,18 +911,11 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 			view.setSelected(false);
 			view.requestFocus();
 		}
-
-		updateGridViewInfo(favManager.getPicURLs(), favManager.getTitles());
-
-		updatePageInfo(page > 0 ? 1 : 0, page);
+		mCurrentPageNum = page > 0 ? 1 : 0;
+		updateGridViewInfo(null);
+		updatePageInfo(mCurrentPageNum, page);
 		updatePathInfo(null);
 
-	}
-
-	private void clearDisplay() {
-		updateGridViewInfo(null, null);
-		updatePageInfo(0, 0);
-		updatePathInfo(null);
 	}
 
 	OnFocusChangeListener buttonFocusChange = new OnFocusChangeListener() {
@@ -650,11 +923,11 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 		@Override
 		public void onFocusChange(View v, boolean hasFocus) {
 			// TODO Auto-generated method stub
-			if (lastFocusButton == v) {
+			if (curSelectButton == v) {
 				if (hasFocus) {
-					lastFocusButton.setSelected(false);
+					curSelectButton.setSelected(false);
 				} else {
-					lastFocusButton.setSelected(true);
+					curSelectButton.setSelected(true);
 				}
 			}
 		}
@@ -666,21 +939,48 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 			// TODO Auto-generated method stub
 			if (arg2.getAction() == KeyEvent.ACTION_DOWN) {
 				if (arg1 == KeyEvent.KEYCODE_BACK) {
-					pop_dialog.closeAnimation();
-					core.cancleTask();
+					if (bDataFromCategory) {
+						pop_dialog.showConfirm(R.string.exitapp,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int id) {
+										bDataFromCategory = false;
+										core.cancleTask();
+										finish();
+									}
+								}, null);
+					} else {
+						core.cancleTask();
+						pop_dialog.closeAnimation();
+						if (curSelectButton != lastSelectButton) {
+							lastSelectButton.requestFocus();
+							lastSelectButton.setSelected(true);
+							curSelectButton.setSelected(false);
+							curSelectButton = lastSelectButton;
+						}						
+					}
+
 				}
 			}
 			return false;
 		}
 	};
 
-	DialogInterface.OnClickListener focusChangeLister = new DialogInterface.OnClickListener() {
+	DialogInterface.OnClickListener eixtLister = new DialogInterface.OnClickListener() {
 
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
 			// TODO Auto-generated method stub
-			lastFocusButton.setSelected(false);
-			lastFocusButton.requestFocus();
+			finish();
+		}
+	};
+
+	View.OnClickListener pageClickListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			updateNextPage(v.getId() == R.id.IDC_GridView_video_pageback);
+
 		}
 	};
 
@@ -695,112 +995,29 @@ public class VideoBrowser extends Activity implements OnItemClickListener,
 	public void getSearchVideoData(DATA_TYPE searchType, String searchContent) {
 		setButtonStatesUnSelect();
 		mSearchButton.setSelected(true);
-		lastFocusButton = mSearchButton;
+		curSelectButton = mSearchButton;
 		mSourceType = SOURCE_TYPE.SEARCH.ordinal();
-		pop_dialog.showAnimation();
-		clearDisplay();
-		updatePathInfo("/" + searchContent);
 		core.loadSearchPage(searchType, searchContent);
-
-	}
-
-	public String[] getCategoryData() {
-		return mCategorymg
-				.getTitles(CategoryManager.SOURCE_TYPE.values()[mSourceType]);
-	}
-
-	public void getDataFromCategory(int lv1, int lv2, int lv3) {
 		pop_dialog.showAnimation();
-		mCategroyButton.setSelected(true);
-		Category currentNode = mCategorymg.getNode(lv1);
 
-		currentPath = currentNode.toString();
-
-		if (lv2 != -1) {
-			currentNode = currentNode.getSubNode(lv2);
-			currentPath += currentNode.toString();
-
-			if (lv3 != -1) {
-				currentNode = currentNode.getSubNode(lv3);
-				currentPath += currentNode.toString();
-			}
-		}
-		core.loadContentPage(CategoryManager.SOURCE_TYPE.values()[mSourceType],
-				currentNode);
-		// clearDisplay();
 	}
 
-	class GuestSupport {
-		// use to support mouse
-		int startX = 0, startY = 0, endX = 0, endY = 0;
-		public OnTouchListener onTouchListener = new OnTouchListener() {
-			@Override
-			public boolean onTouch(View arg0, MotionEvent arg1) {
-				// TODO Auto-generated method stub
-				boolean mouseEnd = false;
-				switch (arg1.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-					startX = (int) arg1.getX();
-					startY = (int) arg1.getY();
-					break;
-				case MotionEvent.ACTION_MOVE:
-					break;
-				case MotionEvent.ACTION_UP:
-					mouseEnd = true;
-					endX = (int) arg1.getX();
-					endY = (int) arg1.getY();
-					break;
-				default:
-					break;
-				}
-				if (Math.abs(endX - startX) < 20
-						&& Math.abs(endY - startY) < 20 && mouseEnd) {
-					System.out.println("-----  Item OnClick -------");
-					return false;
-				} else if (mouseEnd) {
-					System.out.println("-----  page change -------");
-					dealGesture(endX - startX, endY - startY);
-					return true;
-				} else {
-					System.out.println("-----  do nothing -------");
-					return false;
-				}
-			}
-		};
+	public void getDataFromCategory(int... index) {
+		bDataFromCategory = true;
+		pop_dialog.showAnimation();
 
-		private void dealGesture(int offsetX, int offsetY) {
-			System.out.println("--------- the offsetX = " + offsetX);
-			System.out.println("--------- the offsetY = " + offsetY);
-			if (Math.abs(offsetX) > 200 && Math.abs(offsetY) < 50) {
-				if (offsetX < 0) {
-					if (mSourceType == SOURCE_TYPE.VOD.ordinal()
-							|| mSourceType == SOURCE_TYPE.LIVE.ordinal()
-							|| mSourceType == SOURCE_TYPE.SEARCH.ordinal()) {
-						gdAdapter.CancleTask();
-						core.loadPageList(mCurrentPageNum + 1);
-						pop_dialog.showAnimation();
-					} else {
-						mCurrentPageNum++;
-						turnToNextPage(mCurrentPageNum);
-					}
-					return;
-				} else {
-					if ((mCurrentPageNum > 1)) {
-						if (mSourceType == SOURCE_TYPE.VOD.ordinal()
-								|| mSourceType == SOURCE_TYPE.LIVE.ordinal()
-								|| mSourceType == SOURCE_TYPE.SEARCH.ordinal()) {
-							gdAdapter.CancleTask();
-							core.loadPageList(mCurrentPageNum - 1);
-							pop_dialog.showAnimation();
-							return;
-						} else {
-							mCurrentPageNum--;
-							turnToNextPage(mCurrentPageNum);
-						}
-					}
-					return;
-				}
-			}
+		core.loadContentPage(CategoryManager.SOURCE_TYPE.values()[mSourceType],
+				CategoryManager.getCurrent().getNodeByIndex(index));
+	}
+
+	@Override
+	public boolean onHover(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_HOVER_ENTER:
+			v.requestFocusFromTouch();
+			break;
 		}
+		return false;
 	}
 }

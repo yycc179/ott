@@ -14,18 +14,18 @@
         <ImageView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/new_ott_spinner_popoup_1" />
+            android:background="@drawable/spinner_popoup_bg1" />
 
         <ImageView
             android:layout_width="fill_parent"
             android:layout_height="0px"
             android:layout_weight="1"
-            android:background="@drawable/new_ott_spinner_popoup_2" />
+            android:background="@drawable/spinner_popoup_bg2" />
 
         <ImageView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/new_ott_spinner_popoup_3" />
+            android:background="@drawable/spinner_popoup_bg3" />
     </LinearLayout>
 
     <ListView

@@ -12,66 +12,92 @@ public class CategoryManager {
 		VOD, LIVE
 	}
 
-	private static CategoryManager categoryMgr;
-	private SOURCE_TYPE curSourceType = SOURCE_TYPE.VOD;
+	private static Map<SOURCE_TYPE, CategoryManager> categoryMgr = new HashMap<SOURCE_TYPE, CategoryManager>();
+	static SOURCE_TYPE curSourceType;
 
-	private Map<SOURCE_TYPE, List<Category>> list;
-	private Map<SOURCE_TYPE, String[]> title;
-
-	public static CategoryManager getInstace() {
-		if(categoryMgr == null){
-			categoryMgr = new CategoryManager();
-		}
-		return categoryMgr;
-	}
+	private List<Category> list;
+	private String[] title;
+	private StringBuffer currentPath;
 
 	private CategoryManager() {
-		list = new HashMap<SOURCE_TYPE, List<Category>>();
-		title = new HashMap<SOURCE_TYPE, String[]>();
-		list.put(SOURCE_TYPE.VOD, new ArrayList<Category>());
-		title.put(SOURCE_TYPE.VOD, null);
+		list = new ArrayList<Category>();
 	}
 
-	void setLiveEnable() {
-		list.put(SOURCE_TYPE.LIVE, new ArrayList<Category>());
-		title.put(SOURCE_TYPE.LIVE, null);
+	public static CategoryManager getCurrent() {
+		return categoryMgr.get(curSourceType);
 	}
 
-	public Boolean getLiveEnable() {
-		return list.containsKey(SOURCE_TYPE.LIVE);
+	public static CategoryManager getCurrent(SOURCE_TYPE source) {
+		if (source != null) {
+			curSourceType = source;
+		}
+		CategoryManager mgr = categoryMgr.get(curSourceType);
+		if (mgr == null) {
+			mgr = new CategoryManager();
+			categoryMgr.put(curSourceType, mgr);
+		}
+		return mgr;
 	}
 
-	void addNode(SOURCE_TYPE type, Category node) {
-		list.get(type).add(node);
+	public static Boolean containVod() {
+		return categoryMgr.containsKey(SOURCE_TYPE.VOD);
+	}
+
+	public static Boolean containLive() {
+		return categoryMgr.containsKey(SOURCE_TYPE.LIVE);
+	}
+
+	void addNode(Category node) {
+		list.add(node);
 	}
 
 	public Category getNode(int index) {
-		return list.get(curSourceType).get(index);
+		return list.get(index);
 	}
 
-	Category getNode(SOURCE_TYPE type, int index) {
-		return list.get(type).get(index);
-	}
-
-	public String[] getTitles(SOURCE_TYPE type) {
-		String[] titles = title.get(type);
-
-		if (titles == null) {
-			List<Category> data = list.get(type);
-			titles = new String[data.size()];
+	public String[] getTitles() {
+		if (title == null) {
+			List<Category> data = list;
+			title = new String[data.size()];
 			int i = 0;
 			for (Category node : data) {
-				titles[i++] = node.getTitle();
+				title[i++] = node.getTitle();
 			}
-			title.put(type, titles);
 		}
 
-		curSourceType = type;
-		return titles;
+		return title;
 	}
 
-	static void release(){
-		categoryMgr = null;
+	public Category getFirstNode() {
+		Category cate = getNode(0);
+		currentPath = new StringBuffer(cate.toString());
+
+		while (cate.getChildType() == DATA_TYPE.CATEGORY) {
+			cate = cate.getSubNode(0);
+			currentPath.append(cate);
+		}
+
+		return cate;
 	}
-	
+
+	public Category getNodeByIndex(int... index) {
+		Category cate = getNode(index[0]);
+		currentPath = new StringBuffer(cate.toString());
+
+		for (int i = 1; i < index.length; i++) {
+			cate = cate.getSubNode(index[i]);
+			currentPath.append(cate);
+		}
+
+		return cate;
+	}
+
+	String getCurrentPath() {
+		return currentPath.toString();
+	}
+
+	static void release() {
+		categoryMgr.clear();
+	}
+
 }

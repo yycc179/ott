@@ -1,0 +1,295 @@
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="1280px"
+    android:layout_height="720px"
+    android:background="#00256466" >
+
+    <SurfaceView
+        android:id="@+id/movieView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_x="0px"
+        android:layout_y="0px" >
+    </SurfaceView>
+
+    <AbsoluteLayout
+        android:id="@+id/Play_status"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_x="0px"
+        android:layout_y="0px"
+        android:visibility="gone" >
+
+        <RelativeLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_x="0dp"
+            android:layout_y="0dp"
+            android:background="@drawable/vodplayer_titlebg" >
+        <TextView
+            android:id="@+id/filmName"
+            android:layout_width="1200px"
+            android:layout_height="40dp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:gravity="center|left"
+            android:paddingLeft="30px"
+            android:textSize="23px" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/playstatus_img"
+            android:layout_width="126px"
+            android:layout_height="126px"
+            android:layout_x="577px"
+            android:layout_y="238px"
+            android:visibility="gone"
+            android:background="@drawable/vodplayer_status_play_n" />
+
+        <RelativeLayout
+            android:layout_width="1280px"
+            android:layout_height="80px"
+            android:layout_x="0px"
+            android:layout_y="640px"
+            android:background="#cd000000" >
+
+            <TextView
+                android:id="@+id/play_time"
+                android:layout_width="wrap_content"
+                android:layout_height="35px"
+                android:layout_alignLeft="@+id/play_progessbar"
+                android:background="#00000000"
+                android:gravity="center"
+                android:text="@string/time_init"
+                android:textColor="#ffffff"
+                android:textSize="23px" />
+
+            
+            <SeekBar
+                android:id="@+id/play_progessbar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="1174px"
+                android:layout_height="28px"
+                android:layout_gravity="center"
+                android:layout_marginLeft="60px"
+                android:layout_marginTop="40px"
+                android:maxHeight="28px"
+                android:minHeight="28px"
+                android:max="100"
+                android:progressDrawable="@drawable/player_progressbg"
+                android:thumb="@drawable/seek_thumb_pressed"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/play_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="25px"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="7px"
+                android:focusable="false"
+                android:clickable="true"
+                android:layout_alignRight="@+id/play_progessbar"
+                android:background="@drawable/hotkey_menu_selector"
+                android:gravity="center"
+                 />
+
+        </RelativeLayout>
+    </AbsoluteLayout>
+
+    <AbsoluteLayout
+        android:id="@+id/play_info"
+        android:layout_width="fill_parent"
+        android:layout_height="266px"
+        android:layout_x="0px"
+        android:layout_y="454px"
+        android:background="@drawable/vodplayer_info_bg"
+        android:visibility="gone" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="63px"
+            android:layout_x="0dp"
+            android:layout_y="18dp"
+             >
+
+            <RelativeLayout
+                android:id="@+id/resoulte"
+                android:layout_width="159dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="184dp" >
+
+                <ImageView
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/detail_btn_hd_n" />
+
+                <Button
+                    android:id="@+id/play_resoulte"
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/detail_resoulte_button_bg"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="35px"
+                    android:textColor="#000000"
+                    android:textSize="19px"
+                    android:text="@string/low"
+                    android:textStyle="bold" 
+                    />
+
+                <ImageView
+                    android:id="@+id/play_resoulte_state"
+                    android:layout_width="15px"
+                    android:layout_height="11px"
+                    android:layout_marginLeft="118dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/spinner_popup_hd_close"
+                    android:clickable="false"
+                    android:focusable="false" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/subtitle"
+                android:layout_width="159dp"
+                android:layout_height="fill_parent"
+                android:layout_toRightOf="@+id/resoulte"
+                android:layout_marginLeft="-7dp" >
+
+                <ImageView
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/detail_btn_hd_n" />
+
+                <Button
+                    android:id="@+id/play_subtitle"
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/detail_resoulte_button_bg"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="30px"
+                    android:textColor="#000000"
+                    android:textSize="19px"
+                    android:text="@string/Subtitle"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/play_audio_state"
+                    android:layout_width="15px"
+                    android:layout_height="11px"
+                    android:layout_marginLeft="118dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/spinner_popup_hd_close"
+                    android:clickable="false"
+                    android:focusable="false" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/audio"
+                android:layout_width="159dp"
+                android:layout_height="fill_parent"
+                android:layout_toRightOf="@+id/subtitle"
+                android:layout_marginLeft="-7dp" >
+
+                <ImageView
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/detail_btn_hd_n" />
+
+                <Button
+                    android:id="@+id/play_audio"
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/detail_resoulte_button_bg"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="35px"
+                    android:textColor="#000000"
+                     android:text="@string/audio_track"
+                    android:textSize="19px"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/play_audio_state"
+                    android:layout_width="15px"
+                    android:layout_height="11px"
+                    android:layout_marginLeft="118dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/spinner_popup_hd_close"
+                    android:clickable="false"
+                    android:focusable="false" />
+            </RelativeLayout>
+
+             <RelativeLayout
+                android:id="@+id/autoplay"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_toRightOf="@+id/audio"
+                android:layout_marginLeft="70dp" >
+
+			<CheckBox 
+			    android:id="@+id/autoplayBox"
+                android:layout_width="50dp"
+                android:layout_height="60dp"
+			    android:gravity="center"
+			    android:layout_centerVertical="true"
+			    />
+			<TextView 
+			    android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_toRightOf="@+id/autoplayBox"
+			    android:gravity="center"
+			    android:layout_centerVertical="true"
+			    android:text="@string/autoPlay"
+			    android:textSize="26px"
+			    />
+            </RelativeLayout>
+            
+             
+            <RelativeLayout
+                android:id="@+id/gotoView"
+                android:layout_width="159dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="927dp" >
+
+                <ImageView
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/detail_btn_hd_n" />
+
+                <Button
+                    android:id="@+id/play_seek"
+                    android:layout_width="159dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/detail_resoulte_button_bg"
+                    android:gravity="center"
+                    android:text="@string/seek"
+                    android:textColor="#000000"
+                    android:textSize="21px"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="950px"
+            android:layout_height="2px"
+            android:layout_x="165px"
+            android:layout_y="80px"
+            android:background="@color/black" />
+
+        <ImageView
+            android:layout_width="950px"
+            android:layout_height="2px"
+            android:layout_x="165px"
+            android:layout_y="82px"
+            android:background="#373737" />
+
+        <FrameLayout
+            android:id="@+id/fragment_layout"
+            android:layout_width="1010px"
+            android:layout_height="170px"
+            android:layout_x="135dp"
+            android:layout_y="91dp"
+            android:nextFocusRight="@+id/fragment_movie"
+            android:visibility="visible" />
+
+    </AbsoluteLayout>
+    
+</AbsoluteLayout>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="1280.0px"
+    android:layout_height="720.0px"
+    android:background="@drawable/website_bg" >
+
+    <ImageView
+        android:layout_width="86.0dip"
+        android:layout_height="105.0dip"
+        android:layout_x="128.0dip"
+        android:layout_y="46.0dip"
+        android:background="@drawable/website_onlinevedio_app"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="230.0px"
+        android:layout_y="83.0px"
+        android:text="@string/app_name"
+        android:textColor="#ff000000"
+        android:textSize="27.0px"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/IDC_GridView_OTT_pageback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="40.0px"
+        android:layout_y="367.0px"
+        android:background="@drawable/websit_page_prev"
+        android:contentDescription="@null"
+        android:visibility="gone" />
+
+    <com.ott.webtv.WebGridView
+        android:id="@+id/IDC_GridView_OTT_mainApp_Grid"
+        android:layout_width="1020.0dip"
+        android:layout_height="480.0dip"
+        android:layout_x="130.0dip"
+        android:layout_y="155.0dip"
+        android:listSelector="#00000000"
+        android:verticalSpacing="18.0px"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/IDC_GridView_OTT_pagedown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="1219.0px"
+        android:layout_y="367.0px"
+        android:background="@drawable/websit_page_next"
+        android:contentDescription="@null"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/IDC_GridView_OTT_PageNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="1162.0px"
+        android:layout_y="616.0px"
+        android:gravity="center"
+        android:textColor="#ffa4d9fb"
+        android:textSize="21.0px" />
+
+</AbsoluteLayout>

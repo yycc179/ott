@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:constantSize="true"
+    android:variablePadding="true" >
+    
+    <item android:state_focused="true" android:drawable="@drawable/epg_sel_cur"></item>
+	<!-- <item android:state_enabled="true" android:drawable="@drawable/installation_but_cur"></item> -->
+</selector>

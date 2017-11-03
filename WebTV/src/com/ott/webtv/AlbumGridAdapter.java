@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnHoverListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
@@ -28,6 +29,8 @@ public class AlbumGridAdapter extends BaseAdapter{
 	private String[] gatherContent  = new String[GATHERCOLUMNUM];
 	private int gatherTotalNum;
 	
+	private OnHoverListener listHoverListener = null;
+	
 	public void setAdapterTotalNum(Context context,int serialNum){
 		mcontext = context;
 		mserialNum = serialNum;
@@ -39,6 +42,9 @@ public class AlbumGridAdapter extends BaseAdapter{
 			gatherTotalNum = mserialNum/SINGLECOLUMNUM;
 	}
 	
+	public void setHoverListener(OnHoverListener listener){
+		this.listHoverListener = listener;
+	}
 	public void setSerialContent(String Class,int startIndex){
 		mClass = Class;
 		int i=0;
@@ -51,7 +57,7 @@ public class AlbumGridAdapter extends BaseAdapter{
 			i++;
 		}
 		adapterCount = i;
-		tv = new TextView[adapterCount];
+//		tv = new TextView[adapterCount];
 	}
 	
 	public void setGatherContent(String Class,int pagenum){
@@ -72,7 +78,7 @@ public class AlbumGridAdapter extends BaseAdapter{
 			i++;
 		}
 		adapterCount = i;
-		tv = new TextView[adapterCount];
+//		tv = new TextView[adapterCount];
 	}
 	
 	
@@ -103,8 +109,8 @@ public class AlbumGridAdapter extends BaseAdapter{
 	@Override
 	public Object getItem(int arg0) {
 		// TODO Auto-generated method stub
-		return null;
-		//return tv[arg0];
+//		return null;
+		return tv;
 	}
 
 	@Override
@@ -112,7 +118,7 @@ public class AlbumGridAdapter extends BaseAdapter{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	private TextView[] tv ;
+	private View tv ;
 	@SuppressLint("NewApi")
 	@Override
 	public View getView(int arg0, View arg1, ViewGroup arg2) {
@@ -125,11 +131,12 @@ public class AlbumGridAdapter extends BaseAdapter{
 			mHold.signleView = (TextView)arg1.findViewById(R.id.Video_detail_single_Content);
 			mHold.gatherView  = (TextView)arg1.findViewById(R.id.Video_detail_gather_Content);
 			mHold.serialLayout = (RelativeLayout)arg1.findViewById(R.id.video_detail_single);
+			arg1.setOnHoverListener(listHoverListener);
 			arg1.setTag(mHold);
 		}else{
 			mHold = (mHoldGridView)arg1.getTag();
 		}
-		
+		arg1.setTag(R.layout.fragment_albuml_format,arg0);
 		if(mClass.equals(GATHER)){
 			mHold.serialLayout.setVisibility(View.GONE);
 			mHold.gatherView.setVisibility(View.VISIBLE);
@@ -139,20 +146,21 @@ public class AlbumGridAdapter extends BaseAdapter{
 			mHold.gatherView.setVisibility(View.GONE);
 		}
 		
-		tv[arg0] = mHold.signleView;
 		if(mClass.equals(GATHER)){
-			tv[arg0] = mHold.gatherView;
 			mHold.gatherView.setText(gatherContent[arg0]);
 			if(mLastItem == arg0){
-				mHold.gatherView.setTextColor(Color.BLUE);
-				mHold.gatherView.setBackground(mcontext.getResources().getDrawable(R.drawable.new_ott_serial_btn_list));
+				tv = arg1;
+				arg1.setActivated(true);
+//				mHold.gatherView.setTextColor(Color.BLUE);
+//				mHold.gatherView.setBackground(mcontext.getResources().getDrawable(R.drawable.detail_album_serial_btn_list));
 			}
 		}else if(mClass.equals(SINGLE)){
-			tv[arg0] = mHold.signleView;
 			mHold.signleView.setText(singleContent[arg0]);
 			if(mLastItem == arg0){
-				mHold.signleView.setTextColor(Color.BLUE);
-				mHold.signleView.setBackground(mcontext.getResources().getDrawable(R.drawable.new_ott_serial_btn_channel));
+				tv = arg1;
+				arg1.setActivated(true);
+//				mHold.signleView.setTextColor(Color.BLUE);
+//				mHold.signleView.setBackground(mcontext.getResources().getDrawable(R.drawable.detail_album_serial_btn_channel));
 			}
 		}
 		

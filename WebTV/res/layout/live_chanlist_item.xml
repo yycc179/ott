@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="45px"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/chnNo"
+        android:layout_width="0dp"
+        android:layout_height="45px"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:textColor="#A7D9FC"
+        android:textSize="23px" />
+
+    <ImageView
+        android:layout_width="3px"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_vertical"
+        android:visibility="visible"
+        android:background="@drawable/live_epg_title_line" />
+
+    <TextView
+        android:id="@+id/chnName"
+        android:layout_width="0dp"
+        android:layout_height="45px"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:background="@drawable/epg_daily_selector_for_channel"
+        android:textColor="@drawable/chnlist_textview_selector"
+        android:textSize="25px" />
+
+</LinearLayout>

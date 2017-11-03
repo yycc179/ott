@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="420px"
+    android:layout_height="216px"
+     >
+    
+    <ImageView
+        android:layout_width="420px"
+        android:layout_height="216px"
+        android:background="@drawable/dialog_bg" >
+    </ImageView>
+    
+    <TextView
+        android:id="@+id/IDC_TextView_PopMesg_poptitle"
+        android:layout_width="435px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="#00000000"
+        android:gravity="center_horizontal"
+        android:text="@string/confirm"
+        android:textColor="@color/white"
+        android:textSize="24px" />
+
+    <TextView
+        android:id="@+id/pop_content"
+        android:layout_width="395px"
+        android:layout_height="99px"
+        android:layout_marginLeft="20dp"
+		android:layout_marginTop="40dp"
+        android:background="#00000000"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="24px" />
+
+    <Button
+        android:id="@+id/pop_ok"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="162px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="130dp"
+		android:layout_marginTop="140dp"
+		android:background="@drawable/epg_sel_cur"
+        android:gravity="center"
+        android:textColor="#FF0000"
+        android:text="@string/ok"
+        android:textSize="30px" />
+
+
+</RelativeLayout>

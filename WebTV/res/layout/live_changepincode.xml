@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <ImageView
+        android:layout_width="618px"
+        android:layout_height="295px"
+        android:layout_x="329px"
+        android:layout_y="211px"
+        android:background="@drawable/dialog_bg" >
+    </ImageView>
+    
+    <TextView
+        android:id="@+id/IDC_TextView_ChangePinCode_Title"
+        android:layout_width="618px"
+        android:layout_height="wrap_content"
+        android:layout_x="329px"
+        android:layout_y="233px"
+        android:background="@color/transparent_background"
+        android:gravity="center_horizontal"
+        android:singleLine="true"
+        android:text="@string/IDS_String_Change_Pin_Code"
+        android:textColor="@color/white"
+        android:textSize="24px" />
+
+    <TextView
+        android:id="@+id/IDC_TextView_Old_Password"
+        android:layout_width="185px"
+        android:layout_height="wrap_content"
+        android:layout_x="350px"
+        android:layout_y="317px"
+        android:gravity="right"
+        android:text="@string/IDS_String_Old_Password"
+        android:textColor="@color/black"
+        android:textSize="24px" />
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="564px"
+        android:layout_y="294px" >
+
+        <ImageButton
+            android:id="@+id/IDC_ImageButton_OldPassword1"
+            android:layout_width="68px"
+            android:layout_height="68px"
+            android:background="@drawable/live_password_bg_selector"
+            android:src="@drawable/live_password_src_selector" />
+
+        <requestFocus />
+
+        <ImageButton
+            android:id="@+id/IDC_ImageButton_OldPassword2"
+            android:layout_width="68px"
+            android:layout_height="68px"
+            android:layout_alignBaseline="@+id/IDC_ImageButton_OldPassword1"
+            android:layout_marginLeft="14px"
+            android:layout_toRightOf="@+id/IDC_ImageButton_OldPassword1"
+            android:background="@drawable/live_password_bg_selector"
+            android:src="@drawable/live_password_src_selector" />
+
+        <ImageButton
+            android:id="@+id/IDC_ImageButton_OldPassword3"
+            android:layout_width="68px"
+            android:layout_height="68px"
+            android:layout_alignBaseline="@+id/IDC_ImageButton_OldPassword1"
+            android:layout_marginLeft="14px"
+            android:layout_toRightOf="@+id/IDC_ImageButton_OldPassword2"
+            android:background="@drawable/live_password_bg_selector"
+            android:src="@drawable/live_password_src_selector" />
+
+        <ImageButton
+            android:id="@+id/IDC_ImageButton_OldPassword4"
+            android:layout_width="68px"
+            android:layout_height="68px"
+            android:layout_alignBaseline="@+id/IDC_ImageButton_OldPassword1"
+            android:layout_marginLeft="14px"
+            android:layout_toRightOf="@+id/IDC_ImageButton_OldPassword3"
+            android:background="@drawable/live_password_bg_selector"
+            android:src="@drawable/live_password_src_selector" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/IDC_TextView_New_Password"
+        android:layout_width="185px"
+        android:layout_height="wrap_content"
+        android:layout_x="350px"
+        android:layout_y="395px"
+        android:gravity="right"
+        android:singleLine="true"
+        android:text="@string/IDS_String_New_Password"
+        android:textColor="@color/black"
+        android:textSize="24px" />
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="564px"
+        android:layout_y="375px" >
+
+        <ImageButton
+            android:id="@+id/IDC_ImageButton_NewPassword1"
+            android:layout_width="68px"
+            android:layout_height="68px"
+            android:background="@drawable/live_password_bg_selector"
+            android:src="@drawable/live_password_src_selector" />
+
+        <ImageButton
+            android:id="@+id/IDC_ImageButton_NewPassword2"
+            android:layout_width="68px"
+            android:layout_height="68px"
+            android:layout_alignBaseline="@+id/IDC_ImageButton_NewPassword1"
+            android:layout_marginLeft="14px"
+            android:layout_toRightOf="@+id/IDC_ImageButton_NewPassword1"
+            android:background="@drawable/live_password_bg_selector"
+            android:src="@drawable/live_password_src_selector" />
+
+        <ImageButton
+            android:id="@+id/IDC_ImageButton_NewPassword3"
+            android:layout_width="68px"
+            android:layout_height="68px"
+            android:layout_alignBaseline="@+id/IDC_ImageButton_NewPassword1"
+            android:layout_marginLeft="14px"
+            android:layout_toRightOf="@+id/IDC_ImageButton_NewPassword2"
+            android:background="@drawable/live_password_bg_selector"
+            android:src="@drawable/live_password_src_selector" />
+
+        <ImageButton
+            android:id="@+id/IDC_ImageButton_NewPassword4"
+            android:layout_width="68px"
+            android:layout_height="68px"
+            android:layout_alignBaseline="@+id/IDC_ImageButton_NewPassword1"
+            android:layout_marginLeft="14px"
+            android:layout_toRightOf="@+id/IDC_ImageButton_NewPassword3"
+            android:background="@drawable/live_password_bg_selector"
+            android:src="@drawable/live_password_src_selector" />
+    </RelativeLayout>
+
+
+</AbsoluteLayout>

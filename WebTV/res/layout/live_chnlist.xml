@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350px"
+    android:layout_height="439px"
+    android:background="#EE1b1f24"
+     >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="40px"
+            android:background="@drawable/epg_title_bar" >
+
+            <TextView
+                android:id="@+id/chnListName"
+                android:layout_width="fill_parent"
+                android:layout_height="40px"
+                android:gravity="center"
+                android:paddingLeft="10px"
+                android:paddingRight="30px"
+                android:textColor="#FFB7B7"
+                android:textSize="24px" />
+        </LinearLayout>
+
+        <LinearLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="360px"
+            android:layout_marginTop="42px"
+            android:layout_marginBottom="2px"
+            >
+        <ListView
+            android:id="@+id/listview_channellist"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="#00ffffff"
+            android:drawSelectorOnTop="false"
+            android:fadeScrollbars="false"
+            android:fadingEdge="none"
+            android:fastScrollEnabled="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:listSelector="#00000000"
+            android:scrollbarStyle="outsideInset"
+            android:scrollbarThumbVertical="@drawable/common_scroll_2"
+            android:scrollbarTrackVertical="@drawable/common_scroll_1" />
+        </LinearLayout>
+        
+        
+
+        <LinearLayout
+            android:id="@+id/chnlistInfoBar_channel"
+            android:layout_width="fill_parent"
+            android:layout_height="37px"
+            android:layout_marginTop="404px"
+            android:background="#000000"
+            android:orientation="horizontal"
+            android:visibility="visible" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="23px"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2px"
+                android:src="@drawable/hotkey_red" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="@string/livefav"
+                android:textColor="#ffffff"
+                android:textSize="20px" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="23px"
+                android:layout_gravity="center"
+                android:layout_marginLeft="26dp"
+                android:layout_marginTop="2px"
+                android:src="@drawable/hotkey_green" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="@string/fav_add"
+                android:textColor="#ffffff"
+                android:textSize="20px" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="23px"
+                android:layout_gravity="center"
+                android:layout_marginLeft="26dp"
+                android:layout_marginTop="2px"
+                android:src="@drawable/hotkey_blue" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="@string/Parental"
+                android:textColor="#ffffff"
+                android:textSize="20px" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/chnlistInfoBar_fav"
+            android:layout_width="fill_parent"
+            android:layout_height="37px"
+            android:layout_marginTop="404px"
+            android:background="#000000"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="23px"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2px"
+                android:src="@drawable/hotkey_red" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="@string/fav_del"
+                android:textColor="#ffffff"
+                android:textSize="20px" />
+             <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="23px"
+                android:layout_gravity="center"
+                android:layout_marginLeft="26dp"
+                android:layout_marginTop="2px"
+                android:src="@drawable/hotkey_blue" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="@string/ChanList"
+                android:textColor="#ffffff"
+                android:textSize="20px" />
+        </LinearLayout>
+
+</RelativeLayout>

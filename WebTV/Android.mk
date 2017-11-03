@@ -1,4 +1,4 @@
-ifeq ($(findstring $(SYSCONFIG_TARGET_CLASS),dvb_s dvb_t dvb_c), $(SYSCONFIG_TARGET_CLASS))
+ifeq ($(findstring $(SYSCONFIG_TARGET_CLASS),dvb_s dvb_t dvb_t2 dvb_c), $(SYSCONFIG_TARGET_CLASS))
 
 LOCAL_PATH:= $(call my-dir)
 
@@ -50,7 +50,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES := $(call all-java-files-under, src)
 LOCAL_SRC_FILES := $(filter-out $(WEBTV_CORE_SRC_FILES),$(LOCAL_SRC_FILES))
 
-LOCAL_JAVA_LIBRARIES := stb_webtv_core 
+LOCAL_JAVA_LIBRARIES := stb_webtv_core stb_input_KeyboardDialogUtil
 
 LOCAL_PACKAGE_NAME := WebTV
 

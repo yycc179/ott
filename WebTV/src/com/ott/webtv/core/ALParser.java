@@ -1,5 +1,7 @@
 package com.ott.webtv.core;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,33 +15,21 @@ import com.ott.webtv.core.DataNode.BaseNode;
 import com.ott.webtv.core.DataNode.Category;
 import com.ott.webtv.core.DataNode.Content;
 import com.ott.webtv.core.DataNode.DATA_TYPE;
+import com.ott.webtv.core.HttpUtils.CBKHandler;
 
 public abstract class ALParser implements ILoader {
 	static int pageSize;
-
+	private static String curSearchVal;
 	private Boolean bInSearchMode;
 
-	private SOURCE_TYPE curSourceType;
-	private BaseNode curDataNode;
-
 	private DATA_TYPE curSearchType;
-	private String curSearchVal;
-
 	private int total_count;
 
 	private static final int PARSE_CANCEL = 2;
-	protected static final int PARSE_NORESULT = 1;
-	protected static final int PARSE_SUCCESS = 0;
-	protected static final int PARSE_ERROR = -1;
-	protected static final int PARSE_IOERROR = -2;
-
-	private static final String STR_NORESULT = "No Result!";
-	private static final String STR_ERROR = "Parse Data Fail!";
-	private static final String STR_IOERROR = "Load Data Fail!";
-
-	// private static final int MAX_RETRY_TIMES = 3;
-
-	// private CoreHandler core = CoreHandler.getInstace();
+	public static final int PARSE_NORESULT = 1;
+	public static final int PARSE_SUCCESS = 0;
+	public static final int PARSE_ERROR = -1;
+	public static final int PARSE_IOERROR = -2;
 
 	protected ALParser(int size) {
 		pageSize = size;
@@ -49,8 +39,12 @@ public abstract class ALParser implements ILoader {
 		pageSize = size;
 	}
 
-	protected SOURCE_TYPE getCurSourceType() {
-		return curSourceType;
+	protected static SOURCE_TYPE getCurSourceType() {
+		return CategoryManager.curSourceType;
+	}
+
+	protected Boolean getSearchFlag() {
+		return bInSearchMode;
 	}
 
 	protected DATA_TYPE getSearchType() {
@@ -58,7 +52,8 @@ public abstract class ALParser implements ILoader {
 	}
 
 	protected BaseNode getCurData() {
-		return curDataNode;
+		ContentManager mgr = ContentManager.getCurrent();
+		return mgr != null ? mgr.getParrentNode() : null;
 	}
 
 	protected void setTotalCount(int count) {
@@ -74,123 +69,98 @@ public abstract class ALParser implements ILoader {
 		return total_count;
 	}
 
+	protected static String getSearchVal() {
+		return curSearchVal;
+	}
+
 	@Override
 	public void loadCategory(String src) {
 		// TODO Auto-generated method stub
-		CategoryManager mgr = CategoryManager.getInstace();
 		Callback c_type = Callback.CBK_GET_CATEGORY_DONE;
 
-		do {
-			JSONObject demoJson = null;
+		try {
+			JSONObject jobj = new JSONObject(src);
 
-			try {
-				demoJson = new JSONObject(src);
+			loadCategory(null, SOURCE_TYPE.VOD, jobj.optJSONArray("VOD"));
 
-				loadCategory(null, SOURCE_TYPE.VOD,
-						demoJson.getJSONArray("VOD"));
+			loadCategory(null, SOURCE_TYPE.LIVE, jobj.optJSONArray("Live"));
 
-				if (!demoJson.isNull("Live")) {
-					mgr.setLiveEnable();
-					loadCategory(null, SOURCE_TYPE.LIVE,
-							demoJson.getJSONArray("Live"));
-				}
-
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				c_type = Callback.CBK_GET_CATEGORY_FAIL;
-				break;
-			}
-		} while (false);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			c_type = Callback.CBK_GET_CATEGORY_FAIL;
+		}
 
 		CoreHandler.getInstace().sendCallback(c_type, 0, 0, null);
 	}
 
-	private int loadCategory(Category parrent, SOURCE_TYPE type, JSONArray ja) {
+	private void loadCategory(Category parrent, SOURCE_TYPE type, JSONArray ja)
+			throws JSONException {
+
+		if (ja == null) {
+			return;
+		}
+
+		CategoryManager mgr = CategoryManager.getCurrent(type);
+
 		int len = ja.length();
-		int ret = 0;
-
 		JSONObject peerObj = null;
+
 		for (int i = 0; i < len; i++) {
-			Category node = new Category();
-			try {
-				peerObj = ja.getJSONObject(i);
+			final Category node = new Category();
+			peerObj = ja.getJSONObject(i);
 
-				node.setTitle(peerObj.getString("title"));
+			node.setTitle(peerObj.getString("title"));
 
-				int c_type = peerObj.getInt("childType");
-				node.setChildType(DATA_TYPE.values()[c_type]);
+			int c_type = peerObj.getInt("childType");
+			node.setChildType(DATA_TYPE.values()[c_type]);
 
-				if (!peerObj.isNull("url")) {
-					node.setURL(peerObj.getString("url"));
+			if (!peerObj.isNull("url")) {
+				node.setURL(peerObj.getString("url"));
 
-					final Category cate = node;
-					if (cate.getChildType() == DATA_TYPE.CATEGORY) {
-						new HttpUtils(cate.getURL(), new IParser() {
-							@Override
-							public void parse(String src) {
-								// TODO Auto-generated method
-								// stub
-								if (parseSubCategory(src, cate) != PARSE_SUCCESS) {
-									System.err.println("parseSubCategory");
-								}
+				if (node.getChildType() == DATA_TYPE.CATEGORY) {
+					new HttpUtils(node.getURL(), new CBKHandler() {
+						@Override
+						public void handle(byte[] src, Object... attr) {
+							// TODO Auto-generated method
+							// stub
+							if (src != null) {
+								parseSubCategory(new String(src), node);
 							}
+						}
 
-						}).execute();
-					}
+					}).execute();
 				}
+			}
 
-				if (!peerObj.isNull("child")) {
-					loadCategory(node, null, peerObj.getJSONArray("child"));
-				}
+			if (!peerObj.isNull("child")) {
+				loadCategory(node, null, peerObj.getJSONArray("child"));
+			}
 
-				if (parrent == null) {
-					CategoryManager.getInstace().addNode(type, node);
-				} else {
-					parrent.addSubNode(node);
-				}
-
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				ret = -1;
+			if (parrent == null) {
+				mgr.addNode(node);
+			} else {
+				parrent.addSubNode(node);
 			}
 		}
-
-		return ret;
 	}
 
-	private HttpUtils makeContentRequest(int page) {
-		String url = null;
+	private HttpUtils doContentRequest(int page) {
+		return bInSearchMode ? makeSearchRequest(page, curSearchVal)
+				: makeContentRequest(page, getCurData());
+	}
 
-		if (bInSearchMode) {
-			url = makeSearchURL(page, curSearchVal);
-		} else {
-			url = makeContentURL(page, curDataNode);
-		}
-
-		System.out.println("Request URL: " + url);
-
-		return new HttpUtils(url).execute();
+	protected String getContentResult(HttpUtils request) {
+		return request.getResult();
 	}
 
 	private int getCurrentPage(int page) {
-		ContentManager mgr = ContentManager.getCurrent();
 		int ret = PARSE_SUCCESS;
 		Callback c_type = Callback.CBK_GET_CONTENT_FAIL;
+		ContentManager mgr = ContentManager.getCurrent();
 		List<Content> tmplist = null;
-		String err_msg = null;
-		
-		int p = page;
 
-		if (p != 1) {
-			int pageStart = page * ContentManager.contentPageSize;
-			p = pageStart / pageSize;
-			int b = pageStart % pageSize;
-			p = b > 0 ? p + 1 : p;
-		}
-
-		String data = makeContentRequest(p).getResult();
+		String data = getContentResult(doContentRequest(mgr.getSitePage()));
 
 		if (HttpUtils.getCanceled()) {
 			ret = PARSE_CANCEL;
@@ -203,16 +173,17 @@ public abstract class ALParser implements ILoader {
 
 		switch (ret) {
 		case PARSE_SUCCESS:
-			System.out.println("_________Get data done__________");
 			if (page == 1) {
-				mgr = ContentManager.newManager();
 				mgr.setPageByCount(total_count);
 			}
-
 			mgr.addList(tmplist);
+
+			if (pageSize < ContentManager.contentPageSize) {
+				preLoadOtherPage();
+			}
+
 			mgr.prepareData(page);
 			c_type = Callback.CBK_GET_CONTENT_DONE;
-
 			break;
 
 		case PARSE_CANCEL:
@@ -220,23 +191,15 @@ public abstract class ALParser implements ILoader {
 			HttpUtils.setCancel(false);
 			break;
 
-		case PARSE_NORESULT:
-			err_msg = STR_NORESULT;
-			break;
-
-		case PARSE_ERROR:
-			err_msg = STR_ERROR;
-			break;
-
-		case PARSE_IOERROR:
-			err_msg = STR_IOERROR;
-			break;
 		}
 
-		CoreHandler.getInstace().sendCallback(c_type, page, 0, err_msg);
+		CoreHandler.getInstace().sendCallback(c_type, page, ret, null);
 
 		if (ret == PARSE_SUCCESS) {
 			preLoadOtherPage();
+
+		} else {
+			mgr.reset();
 		}
 
 		return ret;
@@ -248,53 +211,50 @@ public abstract class ALParser implements ILoader {
 		int page = mgr.getCachePageNum();
 
 		if (page != -1) {
-			String data = makeContentRequest(page).getResult();
+			String data = getContentResult(doContentRequest(page));
 
 			if (data != null) {
 				tmplist = new ArrayList<Content>();
-				parseContentList(data, bInSearchMode, tmplist);
-				mgr.addList(tmplist);
+				if (parseContentList(data, bInSearchMode, tmplist) == PARSE_SUCCESS) {
+					mgr.addList(tmplist);
+				}
 			}
-
 		}
 	}
 
+	private void initData(BaseNode parrent) {
+		total_count = 0;
+		bInSearchMode = ContentManager.isSearchMode();
+
+		ContentManager.newManager(parrent);
+	}
+
 	@Override
-	public void loadContentPage(SOURCE_TYPE type, BaseNode node) {
+	public void loadContentPage(SOURCE_TYPE type, BaseNode parrent) {
 		// TODO Auto-generated method stub
-		Boolean b_search = bInSearchMode;
-		SOURCE_TYPE cur_type = curSourceType;
-		BaseNode cur_node = curDataNode;
+		initData(parrent);
 
-		bInSearchMode = false;
-		curSourceType = type;
-		curDataNode = node;
-
-		if (getCurrentPage(1) == PARSE_CANCEL) {
-			bInSearchMode = b_search;
-			curSourceType = cur_type;
-			curDataNode = cur_node;
+		if (getCurrentPage(1) != PARSE_SUCCESS) {
+			ContentManager.getLast();
 		}
 	}
 
 	@Override
 	public void loadSearchPage(DATA_TYPE searchType, String value) {
 		// TODO Auto-generated method stub
-
-		Boolean b_search = bInSearchMode;
-		DATA_TYPE cur_type = curSearchType;
-		String cur_val = curSearchVal;
-
-		bInSearchMode = true;
+		initData(null);
 		curSearchType = searchType;
-		curSearchVal = value;
 
-		if (getCurrentPage(1) == PARSE_CANCEL) {
-			bInSearchMode = b_search;
-			curSearchType = cur_type;
-			curSearchVal = cur_val;
+		try {
+			curSearchVal = URLEncoder.encode(value, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
+		if (getCurrentPage(1) != PARSE_SUCCESS) {
+			ContentManager.getLast();
+		}
 	}
 
 	@Override
@@ -310,7 +270,6 @@ public abstract class ALParser implements ILoader {
 			} else {
 				System.out.println("Reload page_____ " + page);
 				getCurrentPage(page);
-				
 			}
 		}
 	}
@@ -319,37 +278,61 @@ public abstract class ALParser implements ILoader {
 	public void loadExtraInfo(Content node) {
 		// TODO Auto-generated method stub
 		Callback c_type = Callback.CBK_GET_EXTRA_DONE;
-		DATA_TYPE d_type = node.getContentType();
+		int ret = 0;
 		do {
 			if (node.isDataComplete()) {
 				break;
 			}
 
-			if (d_type == DATA_TYPE.CATEGORY || d_type == DATA_TYPE.CONTAINER
-					|| parseExtraInfo(node) != PARSE_SUCCESS) {
+			ret = parseExtraInfo(node);
+			if (ret != PARSE_SUCCESS) {
 				c_type = Callback.CBK_GET_EXTRA_FAIL;
 				break;
 			}
-
 			node.setDataComplete();
 		} while (false);
 
-		CoreHandler.getInstace().sendCallback(c_type, 0, 0, node);
+		CoreHandler.getInstace().sendCallback(c_type, ret, 0, node);
+	}
+
+	@Override
+	public void loadPlayUrl(Content node, int index) {
+		// TODO Auto-generated method stub
+		Callback c_type = Callback.CBK_GET_URL_DONE;
+		int ret = parsePlayUrl(node, index);
+
+		if (ret != PARSE_SUCCESS) {
+			c_type = Callback.CBK_GET_URL_FAIL;
+		}
+
+		CoreHandler.getInstace().sendCallback(c_type, ret, index, node);
+	}
+
+	@Override
+	public void loadCustomerData(int arg1, int arg2, Object obj) {
+		// TODO Auto-generated method stub
+		Callback c_type = Callback.CBK_GET_CUSTOMER_DONE;
+		int ret = parseCustomerInfo(arg1, arg2, obj);
+		if (ret != PARSE_SUCCESS) {
+			c_type = Callback.CBK_GET_CUSTOMER_FAIL;
+		}
+
+		CoreHandler.getInstace().sendCallback(c_type, arg1, ret, obj);
 	}
 
 	protected abstract int parseSubCategory(final String net_data,
 			Category parrent);
 
-	protected abstract String makeContentURL(int page, BaseNode node);
+	protected abstract HttpUtils makeContentRequest(int page, BaseNode node);
 
-	protected abstract String makeSearchURL(int page, String value);
+	protected abstract HttpUtils makeSearchRequest(int page, String value);
 
 	protected abstract int parseContentList(final String net_data,
 			Boolean bInSearch, List<Content> out);
 
 	protected abstract int parseExtraInfo(Content node);
-}
 
-interface IParser {
-	public void parse(String src);
+	protected abstract int parsePlayUrl(Content node, int index);
+
+	protected abstract int parseCustomerInfo(int arg1, int arg2, Object obj);
 }

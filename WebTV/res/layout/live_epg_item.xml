@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="48px"
+    android:orientation="horizontal"
+     >
+
+    <TextView
+        android:id="@+id/epg_chnName"
+        android:layout_width="fill_parent"
+        android:layout_height="48px"
+        android:background="@drawable/epg_daily_selector_for_channel"
+        android:duplicateParentState="true"
+        android:gravity="center|left"
+        android:paddingLeft="20px"
+        android:singleLine="true"
+        android:textColor="@drawable/chnlist_textview_selector"
+        android:textSize="26px" />
+
+</LinearLayout>

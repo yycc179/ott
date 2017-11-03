@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-   <item android:state_selected="false" android:drawable="@drawable/new_ott_seria_btn_channel_n"/>
-    <item android:state_selected="true"  android:drawable="@drawable/new_ott_seria_btn_channel_cur"/>
+    <item android:state_activated="true" android:drawable="@drawable/detail_album_serial_btn_channel"/>
+     <item android:state_selected="true"  android:drawable="@drawable/detail_album_seria_btn_channel_cur"/>
+    <item android:drawable="@drawable/detail_album_seria_btn_channel_n"/>
 </selector>

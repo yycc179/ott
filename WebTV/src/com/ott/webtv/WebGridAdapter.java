@@ -1,39 +1,53 @@
 package com.ott.webtv;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import com.ott.webtv.R;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class WebGridAdapter extends BaseAdapter {
+import com.ott.webtv.WebContent.TYPE_E;
+import com.ott.webtv.core.HttpUtils;
+import com.ott.webtv.core.HttpUtils.CBKHandler;
 
-	private Context mcontext;
-	private ArrayList<Map<String, Object>> mlist;
+import java.util.List;
+
+public class WebGridAdapter extends BaseAdapter implements View.OnHoverListener {
+
 	private int mGridViewSize;
+	private Context mContext;
+	private Boolean mFirst;
+	private HoldAppContent mHold;
+	private List<WebContent> mList;
+	private int mPageSize;
+	private int pageStartIndex;
+	private GridView mGrid;
 
-	@SuppressWarnings("unchecked")
-	public void setGridParam(Context context, Object list, int pagesize,int pagenum) {
-		this.mcontext = context;
-		int pageStartIndex = (pagenum-1) * pagesize;
-		int pageEndIndex = pageStartIndex + pagesize;
-		System.out.println("----------- the page index"+pageStartIndex+"-------"+pageEndIndex);
-		List<Map<String, Object>> Glist = (List<Map<String, Object>>) list;
-		mlist = new ArrayList<Map<String, Object>>();
-		while ((pageStartIndex < pageEndIndex) && (pageStartIndex < Glist.size())) {
-			mlist.add(Glist.get(pageStartIndex));
-			pageStartIndex++;
-		}
-		mGridViewSize = mlist.size();
+	public WebGridAdapter(Context contenxt, List<WebContent> list,
+			int pageSize, GridView gd) {
+		mContext = contenxt;
+		mPageSize = pageSize;
+		pageStartIndex = 0;
+		mList = list;
+		mGrid = gd;
+	}
+
+	public void setCurrentPage(int page) {
+		mFirst = true;
+		pageStartIndex = ((page - 1) * mPageSize);
+
+		int left = mList.size() - pageStartIndex;
+		mGridViewSize = left > mPageSize ? mPageSize : left;
 	}
 
 	@Override
@@ -54,7 +68,9 @@ public class WebGridAdapter extends BaseAdapter {
 		return 0;
 	}
 
-	HoldAppContent mHold = null;
+	public int getPageStart() {
+		return pageStartIndex;
+	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -62,28 +78,107 @@ public class WebGridAdapter extends BaseAdapter {
 
 		if (convertView == null) {
 			mHold = new HoldAppContent();
-			convertView = LayoutInflater.from(mcontext).inflate(R.layout.ott_manager_detail, parent, false);
+			convertView = LayoutInflater.from(mContext).inflate(
+					R.layout.website_gridview_item, parent, false);
 			mHold.image = (ImageView) convertView.findViewById(R.id.iv);
 			mHold.tv = (TextView) convertView.findViewById(R.id.tv);
 			convertView.setTag(mHold);
+			convertView.setOnHoverListener(this);
 		} else {
 			mHold = (HoldAppContent) convertView.getTag();
 		}
-		mHold.image.setImageDrawable((Drawable) mlist.get(position).get("img"));
 
-		mHold.tv.setText((String)mlist.get(position).get("name"));
+		if (position == 0 && mFirst == false) {
+			return convertView;
+		}
+		mFirst = false;
+
+		convertView.setTag(R.layout.website_gridview_item, position);
+
+		WebContent content = (WebContent) mList.get(position + pageStartIndex);
+		mHold.tv.setText(content.getName());
+
+		Drawable drawable = content.getLogo();
+		if (drawable != null) {
+			mHold.image.setImageDrawable(drawable);
+
+		} else {
+			new Logoloader(mHold.image, content).set();
+
+		}
+
 		return convertView;
-	}
-
-	int setok = 0;
-
-	public void setnetpic(int setok) {
-		this.setok = setok;
 	}
 
 	private class HoldAppContent {
 		ImageView image;
 		TextView tv;
+	}
+
+	private class Logoloader {
+		WebContent content;
+		ImageView view;
+
+		public Logoloader(ImageView view, WebContent content) {
+			this.view = view;
+			this.content = content;
+		}
+
+		public void set() {
+
+			String date = content.getTag(WebContent.sCacheDate, TYPE_E.LOGO);
+			String etag = content.getTag(WebContent.sCacheEtag, TYPE_E.LOGO);
+
+			new HttpUtils(content.getRequestUrl(TYPE_E.LOGO), new CBKHandler() {
+
+				@Override
+				public void handle(byte[] buf, Object... attr) {
+					if (buf == null) {
+						buf = (byte[]) content.readCache(TYPE_E.LOGO);
+					} else {
+						content.writeCache(buf, (String) attr[1],
+								(String) attr[2], TYPE_E.LOGO);
+					}
+
+					if (buf != null) {
+						Drawable drawable = new BitmapDrawable(
+								mContext.getResources(),
+								BitmapFactory.decodeByteArray(buf, 0,
+										buf.length));
+						Message msg = handler.obtainMessage();
+						msg.obj = drawable;
+						msg.sendToTarget();
+						content.setLogo(drawable);
+					}
+
+				}
+			}).setCacheEnable().setParam(HttpUtils.sModifySince, date)
+					.setParam(HttpUtils.sIfNoneMatch, etag).execute();
+		}
+
+		@SuppressLint("HandlerLeak")
+		Handler handler = new Handler() {
+			public void handleMessage(Message msg) {
+				Drawable drawable = (Drawable) msg.obj;
+				view.setImageDrawable(drawable);
+			}
+		};
+	}
+
+	@Override
+	public boolean onHover(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_HOVER_ENTER:
+			int pos = (Integer) v.getTag(R.layout.website_gridview_item);
+			mGrid.setSelection(pos);
+			break;
+
+		case MotionEvent.ACTION_HOVER_EXIT:
+			mGrid.setSelected(false);
+			break;
+		}
+		return false;
 	}
 
 }

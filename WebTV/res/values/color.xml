@@ -1,13 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>  
-<resources>  
- <color name="transparent_background">#00ffffff</color>  
-     <color name="gray">#AAAAAA</color>
-    <color name="yellow">#FFFF00</color>
-     <color name="yellow111">#FF8850</color>
-     <color name="white">#FFFFFF</color>
-     <color name="blue">#1640cd</color>
-     <color name="red">#b40000</color>
-     <color name="black">#000000</color>
-     <color name="gray_bg">#4Dffffff</color>
-     
-</resources>  
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent_background">#00ffffff</color>
+    <color name="gray">#ff808080</color>
+    <color name="dark_gray">#ffa9a9a9</color>
+    <color name="yellow">#ffffff00</color>
+    <color name="yellow111">#ffff8850</color>
+    <color name="white">#ffffffff</color>
+    <color name="ivory">#fffffff0</color>
+    <color name="blue">#ff1640cd</color>
+    <color name="cyan">#ff00ffff</color>
+    <color name="red">#ffb40000</color>
+    <color name="black">#ff000000</color>
+    <color name="gray_bg">#4dffffff</color>
+    <color name="light_blue">#ff2b2b9e</color>
+    <color name="daily_time_enable">#FFB7B7</color>
+</resources>

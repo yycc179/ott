@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="415px"
+        android:layout_height="220px"
+        android:background="@drawable/new_category_bg"
+        android:orientation="vertical"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/edit_video_first_button"
+            android:layout_width="300px"
+            android:layout_height="55px"
+            android:background="@drawable/edit_video_select"
+            android:textColor="@drawable/edit_video_for_textcolor"
+            android:textSize="24px" />
+
+        <Button
+            android:id="@+id/edit_video_second_button"
+            android:layout_width="300px"
+            android:layout_height="55px"
+            android:background="@drawable/edit_video_select"
+            android:textColor="@drawable/edit_video_for_textcolor"
+            android:textSize="24px" />
+    </LinearLayout>
+	
+    <TextView
+        android:id="@+id/edit_video_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15px"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:textSize="20px" />
+</RelativeLayout>

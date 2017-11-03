@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/homepage_live_cur" android:state_focused="true"/>
+    <item android:drawable="@drawable/detail_title_live_sel" android:state_selected="true"/>
+    <item android:drawable="@drawable/homepage_live_cur" android:state_pressed="true"/>
+    <item android:drawable="@drawable/homepage_live_nor"/>
+
+</selector>

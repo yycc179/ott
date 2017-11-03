@@ -14,7 +14,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <uses-library android:name="stb_webtv_core" >
-        </uses-library>         
+        </uses-library>  
+        <uses-library android:name="stb_input_KeyboardDialogUtil" >
+        </uses-library>       
         <activity
             android:name="com.ott.webtv.WebManager"
             android:label="@string/app_name"

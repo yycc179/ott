@@ -6,13 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ott.webtv.core.CategoryManager.SOURCE_TYPE;
+
+import android.annotation.SuppressLint;
+
 public interface DataNode {
 	public static enum DATA_TYPE {
 		CATEGORY, CONTAINER, VIDEO, SERIAL
 	}
 
 	public static enum RESLOUTION {
-		SD, HD720, HD1080
+		LOW, MEDIUM, HIGH
 	}
 
 	@SuppressWarnings("serial")
@@ -37,7 +41,7 @@ public interface DataNode {
 			return url;
 		}
 
-		void setChildType(DATA_TYPE type) {
+		public void setChildType(DATA_TYPE type) {
 			this.childType = type;
 		}
 
@@ -59,8 +63,9 @@ public interface DataNode {
 		@Override
 		public void setChildType(DATA_TYPE type) {
 			// TODO Auto-generated method stub
-			if (type == DATA_TYPE.CATEGORY)
+			if (type == DATA_TYPE.CATEGORY){
 				subList = new ArrayList<Category>();
+			}
 			super.setChildType(type);
 		}
 
@@ -97,14 +102,20 @@ public interface DataNode {
 		private String description;
 		private DATA_TYPE contentType;
 		private Boolean bDataComplete = false;
+		private Boolean bPlayFlag = true;
+		private Boolean bVodNode;
 
-		private RESLOUTION lastResloution = RESLOUTION.SD;
-
+		private RESLOUTION lastResloution = RESLOUTION.LOW;
+		
+		protected Content(){
+			bVodNode = ALParser.getCurSourceType() == SOURCE_TYPE.VOD;
+		}
+		
 		public void setPicURL(String url) {
 			picURL = url;
 		}
 
-		String getPicURL() {
+		public String getPicURL() {
 			return picURL;
 		}
 
@@ -122,19 +133,27 @@ public interface DataNode {
 
 		public String getDescription() {
 			return description;
-		}		
-		
+		}
+
 		void setDataComplete() {
 			bDataComplete = true;
 		}
-
+		
+		public void setPlayDisable(){
+			bPlayFlag = false;
+		}
+		
+		public Boolean getPlayFlag(){
+			return bPlayFlag;
+		}
+		
+		public Boolean isVodContent(){
+			return bVodNode;
+		}		
+		
 		Boolean isDataComplete() {
 			return bDataComplete;
 		}
-//
-//		public Boolean hasLargePic() {
-//			return largePicURL != null;
-//		}
 
 		void setContentType(DATA_TYPE type) {
 			this.contentType = type;
@@ -193,10 +212,6 @@ public interface DataNode {
 	public static class Video extends Content {
 		private static final long serialVersionUID = 5376117619091907347L;
 		private Map<RESLOUTION, String> playURL;
-//		public transient String date;
-//		public transient String author;
-//		public transient String duration;
-
 		private int lastPlayTime;
 
 		public Video() {
@@ -207,7 +222,11 @@ public interface DataNode {
 		public void addPlayURL(RESLOUTION type, String url) {
 			playURL.put(type, url);
 		}
-
+	
+		public void addPlayURL(Map<RESLOUTION, String> url) {
+			playURL = url;
+		}
+		
 		public Boolean isSupport(RESLOUTION type) {
 			return playURL.containsKey(type);
 		}
@@ -233,31 +252,49 @@ public interface DataNode {
 
 	public static class Serial extends Content {
 		private static final long serialVersionUID = 7330441012721143062L;
-		private List<Map<RESLOUTION, String>> list;
+		private Map<Integer, Map<RESLOUTION, String>> list;
+		private List<String> playerUrl;
 
+		private int totalCount;
 		private int[] lastPlayTime;
 		private int lastPlayIndex;
 
+		@SuppressLint("UseSparseArrays")
 		public Serial() {
 			setContentType(DATA_TYPE.SERIAL);
-			list = new ArrayList<Map<RESLOUTION, String>>();
+			list = new HashMap<Integer, Map<RESLOUTION, String>>();//SparseArray can not be serializable
 		}
 
-		public void addOne(Map<RESLOUTION, String> url) {
-			list.add(url);
+		public void setPlayerUrl(List<String> url) {
+			playerUrl = url;
 		}
 
-		public Boolean isSupport(RESLOUTION type) {
-			return list.get(0).containsKey(type);
+		public List<String> getPlayerUrl() {
+			return playerUrl;
+		}
+
+		public void setTotalCount(int count) {
+			totalCount = count;
+		}
+
+		public void addPlayURL(int index, Map<RESLOUTION, String> url) {
+			list.put(Integer.valueOf(index), url);
+		}
+
+		public Boolean isSupport(int index,RESLOUTION type) {
+			if(list.get(Integer.valueOf(index)) == null){
+				return false;
+			}
+			return list.get(Integer.valueOf(index)).containsKey(type);
 		}
 
 		public String getPlayURL(int index, RESLOUTION type) {
 			setLastResloution(type);
-			return list.get(index).get(type);
+			return list.get(Integer.valueOf(index)).get(type);
 		}
 
 		public int getTotalCount() {
-			return list.size();
+			return totalCount > 0 ? totalCount : list.size();
 		}
 
 		public void setLastPlayTime(int index, int sec) {

@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/IDC_LinearLayout_PopupList_Item"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40px"
-    android:orientation="horizontal" >
-
-    <LinearLayout
+    android:layout_height="36px"
+    >
+      <RelativeLayout
         android:id="@+id/IDC_LinearLayout_PopupList_Item"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/popupwindow_listview_bg"
-        android:orientation="horizontal" >
+        android:layout_height="36px"
+         android:duplicateParentState="true"
+         android:background="@drawable/popupwindow_listview_bg"
+        >
 
         <CheckBox
             android:id="@+id/spinner_checkbox"
             android:layout_width="25px"
             android:layout_height="25px"
-            android:layout_gravity="center"
-            android:layout_marginLeft="15px"
-            android:button="@drawable/poplist_checked"
+            android:layout_marginTop="4px"
+            android:layout_marginLeft="8px"
+            android:button="@drawable/spinner_poplist_checked"
             android:checked="false"
             android:focusable="false"
-            android:gravity="center"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
-        <TextView
-            android:id="@+id/spinner_textview"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="19px" />
-    </LinearLayout>
+         <TextView
+             android:id="@+id/spinner_textview"
+             android:layout_width="fill_parent"
+             android:layout_height="36px"
+             android:layout_marginLeft="40px"
+             android:duplicateParentState="true"
+             android:gravity="center_vertical"
+             android:singleLine="true"
+             android:textColor="@color/black"
+             android:textSize="18px" />
 
-</LinearLayout>
+         </RelativeLayout>
+
+</RelativeLayout>

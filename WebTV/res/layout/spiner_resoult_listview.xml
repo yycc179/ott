@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/IDC_LinearLayout_PopupList_Item"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" 
+    >
+ <AbsoluteLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" 
+    android:background="@drawable/new_resolute_bg"
+    >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="108px"
+        android:layout_x="0px"
+        android:layout_y="0px"
+        android:visibility="gone"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/spinner_popoup_bg1" />
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:background="@drawable/spinner_popoup_bg2" />
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/spinner_popoup_bg3" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/spinner_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="108px"
+        android:layout_x="0px"
+        android:layout_y="0px"
+        android:divider="#00000000"
+        android:dividerHeight="0px"
+        android:listSelector="#00000000"
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="none" />
+
+    
+
+</AbsoluteLayout>
+<TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4px"
+        android:gravity="center_horizontal"
+        android:textColor="@color/black"
+        android:textSize="20px"
+        
+        android:text="@string/resolution" />
+</RelativeLayout>

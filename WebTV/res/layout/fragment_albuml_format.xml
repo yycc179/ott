@@ -7,6 +7,7 @@
     <RelativeLayout
         android:layout_width="75px"
         android:layout_height="65px"
+        android:duplicateParentState="true"
         android:id="@+id/video_detail_single"
          >
 
@@ -16,9 +17,10 @@
             android:layout_height="fill_parent"
             android:layout_gravity="center"
             android:background="@drawable/detail_serial_albuml_bg"
+            android:duplicateParentState="true"
             android:gravity="center"
             android:singleLine="true"
-            android:textColor="#ffffff"
+            android:textColor="@drawable/detail_albuml_textcolor"
             android:textSize="22px"
             android:textStyle="bold"
             android:visibility="visible" />
@@ -31,9 +33,10 @@
         android:layout_height="65px"
         android:layout_gravity="center"
         android:background="@drawable/detail_gather_albuml_bg"
+        android:duplicateParentState="true"
         android:gravity="center"
         android:singleLine="true"
-        android:textColor="#ffffff"
+        android:textColor="@drawable/detail_albuml_textcolor"
         android:textSize="22px"
         android:textStyle="bold"
         android:visibility="visible" />
